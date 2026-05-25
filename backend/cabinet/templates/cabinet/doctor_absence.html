@@ -1,0 +1,26 @@
+{% extends "accounts/base_doctor.html" %}
+{% load static %}
+{% block title %}Mon absence — CardioSoin{% endblock %}
+{% block nav_abs %}is-active{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/secretary-dashboard.css' %}?v=12">
+{% endblock %}
+
+{% block content %}
+<div class="sec-page-centre sec-page-centre--absence">
+<h1 class="cs-hero-title">Signaler mon absence</h1>
+<p class="cs-lead">Enregistrement en base, annonce au secrétariat, annulation des RDV du jour et notification des patients concernés.</p>
+<div class="cs-glass cs-glass--pad cs-glass--lift">
+    <form method="post">
+        {% csrf_token %}
+        <label class="cs-label" for="date">Date</label>
+        <input class="cs-input" type="date" name="date" id="date" required>
+        <label class="cs-label" for="motif">Motif</label>
+        <textarea class="cs-textarea" name="motif" id="motif" rows="3"></textarea>
+        <div class="cs-form-actions"><button type="submit" class="cs-btn">Enregistrer</button></div>
+    </form>
+</div>
+{% include "cabinet/partials/absence_historique.html" with historique_medecin_only=1 %}
+</div>
+{% endblock %}

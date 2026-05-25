@@ -1,0 +1,80 @@
+{% extends "accounts/base_patient_shell.html" %}
+{% load static %}
+{% block title %}Espace patient — CardioSoin{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/patient-inner-pages.css' %}">{% endblock %}
+{% block patient_toolbar %}
+<div class="patient-page-head">
+  <div></div>
+  <div class="pdash__top-meta-actions">
+    {% include "accounts/partials/patient_theme_toggle.html" %}
+    <a class="patient-btn patient-btn--ghost" href="{% url 'logout' %}" style="text-decoration:none;font-size:0.78rem;">Déconnexion</a>
+  </div>
+</div>
+{% endblock %}
+{% block content %}
+<header class="pdash__top" style="margin-bottom:1rem;">
+  <div class="pdash__welcome">
+    <p class="pdash__kicker">Espace patient</p>
+    <h1 class="pdash__title">Bonjour, {{ user.get_full_name|default:user.username }}</h1>
+  </div>
+</header>
+<p class="pdash__user-line" style="margin:0 0 1rem;">Votre espace sécurisé : rendez-vous, ordonnances et suivi cardiovasculaire.</p>
+
+<div style="display:flex;flex-wrap:wrap;gap:0.5rem;align-items:center;margin-bottom:1rem;">
+  <span class="pdash__pill">Patient</span>
+  {% if unread_count %}
+  <span class="pdash__pill" style="border:1px solid rgba(251,191,36,0.45);">{{ unread_count }} notification(s)</span>
+  {% endif %}
+</div>
+
+<div class="patient-hub-card" style="margin-bottom:1rem;">
+  <h2>Statut du cabinet</h2>
+  <p style="margin:0;display:flex;align-items:center;gap:0.5rem;font-size:0.92rem;">
+    <span class="cs-dot {% if cabinet_statut == 'ouvert' %}cs-dot--open{% else %}cs-dot--closed{% endif %}" style="display:inline-block;width:10px;height:10px;border-radius:50%;{% if cabinet_statut == 'ouvert' %}background:#84a471{% else %}background:#94a3b8{% endif %}"></span>
+    {% if cabinet_statut == 'ouvert' %}
+    <strong>Ouvert</strong> <span style="opacity:0.75;">— accueil actif</span>
+    {% else %}
+    <strong>Fermé</strong> <span style="opacity:0.75;">— hors horaires d’accueil</span>
+    {% endif %}
+  </p>
+</div>
+
+<nav class="patient-hub-nav" aria-label="Navigation patient">
+  <a href="{% url 'patient_profil' %}">Profil</a>
+  <a href="{% url 'patient_rendez_vous' %}">Mes rendez-vous</a>
+  <a href="{% url 'patient_rendez_vous_nouveau' %}">Demander un RDV</a>
+  <a href="{% url 'patient_ordonnances' %}">Documents PDF</a>
+  <a href="{% url 'patient_space' %}">Tableau de bord</a>
+</nav>
+
+<div class="patient-hub-grid">
+  <div class="patient-hub-card">
+    <h2>Risque cardiovasculaire</h2>
+    <p style="margin:0 0 0.5rem;font-size:0.88rem;opacity:0.85;">Dernière consultation enregistrée</p>
+    {% if last_score %}
+    <p style="font-size:1.25rem;font-weight:800;font-family:Syne,sans-serif;margin:0;">
+      {{ last_score.risk_percent|floatformat:1 }}&nbsp;%
+      <span style="font-weight:600;font-size:0.95rem;opacity:0.8;">· {{ last_score.get_niveau_display }}</span>
+    </p>
+    <div class="patient-risk-gauge" title="Niveau" style="margin-top:0.65rem;">
+      <span class="patient-risk-gauge__bar {% if last_score.niveau == 'faible' %}patient-risk-gauge__bar--faible{% elif last_score.niveau == 'modéré' %}patient-risk-gauge__bar--modere{% else %}patient-risk-gauge__bar--eleve{% endif %}"
+            style="width: min(100%, {{ last_score.risk_percent }}%);"></span>
+    </div>
+    {% else %}
+    <p style="margin:0;opacity:0.8;">Aucune consultation enregistrée</p>
+    {% endif %}
+  </div>
+  <div class="patient-hub-card">
+    <h2>Notifications</h2>
+    {% if notifications %}
+    <ul class="cs-list-plain" style="margin:0;padding-left:1rem;">
+      {% for n in notifications %}
+      <li style="margin-bottom:0.35rem;">● {{ n.message|truncatewords:28 }}</li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p style="margin:0;opacity:0.8;">Aucune notification non lue.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

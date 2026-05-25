@@ -1,0 +1,22 @@
+{% extends "accounts/base_staff.html" %}
+{% block title %}Patient — CardioSoin{% endblock %}
+{% block topbar %}
+<header class="cs-topbar">
+    <a href="{% url 'patient_list' %}" class="cs-back">← Liste</a>
+</header>
+{% endblock %}
+{% block content %}
+<h1 class="cs-hero-title">Fiche patient</h1>
+<p class="cs-lead">Création ou modification (usage administratif).</p>
+
+<div class="cs-glass cs-glass--pad cs-glass--lift" style="max-width:32rem;">
+    <form method="POST" class="cs-django-form">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div class="cs-form-actions">
+            <button type="submit" class="cs-btn">Enregistrer</button>
+            <a href="{% url 'patient_list' %}" class="cs-btn cs-btn--ghost" style="text-decoration:none;">Annuler</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% comment %}
+  Upload photo : input natif invisible au-dessus d'une icône (pas de « Choose file » visible).
+  Variables : field_id, field_name, has_current (optionnel), variant (optionnel, ex. patient),
+              photo_title (optionnel), photo_hint (optionnel)
+{% endcomment %}
+<div class="prof-photo{% if variant %} prof-photo--{{ variant }}{% endif %}">
+  <p class="cs-label prof-photo__title" id="{{ field_id }}_title">{{ photo_title|default:"Photo de profil" }}</p>
+  <div class="prof-photo__zone">
+    <div class="prof-photo__trigger" title="Choisir une image">
+      <input
+        type="file"
+        class="prof-photo__native"
+        name="{{ field_name }}"
+        id="{{ field_id }}"
+        accept="image/png,image/jpeg,image/webp,image/gif,.png,.jpg,.jpeg,.webp,.gif"
+        aria-labelledby="{{ field_id }}_title"
+        aria-describedby="{{ field_id }}_hint"
+      >
+      <span class="prof-photo__icon" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+          <circle cx="8.5" cy="8.5" r="1.5"/>
+          <path d="M21 15l-5-5L5 21"/>
+        </svg>
+      </span>
+    </div>
+    <span class="prof-photo__name" id="{{ field_id }}_filename" data-has-current="{% if has_current %}1{% else %}0{% endif %}" data-placeholder="Aucune image sélectionnée">{% if has_current %}Photo actuelle{% else %}Aucune image sélectionnée{% endif %}</span>
+  </div>
+  <p class="prof-photo__hint" id="{{ field_id }}_hint">{{ photo_hint|default:"PNG, JPG, WebP ou GIF — max. 2 Mo." }}</p>
+</div>

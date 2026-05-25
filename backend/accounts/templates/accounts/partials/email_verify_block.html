@@ -1,0 +1,47 @@
+{% load static %}
+{# purpose: register | change_password ; email_input: sélecteur CSS pour l'e-mail (inscription) #}
+<div
+  class="email-verify"
+  data-email-verify
+  data-purpose="{{ purpose }}"
+  data-send-url="{% url 'email_verification_send' %}"
+  data-confirm-url="{% url 'email_verification_confirm' %}"
+  {% if email_input %}data-email-input="{{ email_input }}"{% endif %}
+  {% if profile_email %}data-profile-email="{{ profile_email|escape }}"{% endif %}
+>
+  <p class="email-verify__lede">
+    {% if purpose == 'register' %}
+    Un code sera envoyé à votre adresse pour confirmer l'inscription.
+    {% else %}
+    Pour modifier votre mot de passe, vérifiez d'abord votre adresse e-mail.
+    {% endif %}
+  </p>
+  <div class="email-verify__actions">
+    <button type="button" class="email-verify__btn email-verify__btn--send" data-email-send>
+      Envoyer le code
+    </button>
+  </div>
+  <div class="email-verify__code-row">
+    <label class="email-verify__label" for="email_verify_code_{{ purpose }}">Code reçu par e-mail</label>
+    <input
+      id="email_verify_code_{{ purpose }}"
+      class="email-verify__input"
+      type="text"
+      inputmode="numeric"
+      pattern="[0-9]{6}"
+      maxlength="6"
+      placeholder="6 chiffres"
+      data-email-code
+      autocomplete="one-time-code"
+    />
+    <button type="button" class="email-verify__btn email-verify__btn--confirm" data-email-confirm>
+      Valider le code
+    </button>
+  </div>
+  <p class="email-verify__status" data-email-status role="status" aria-live="polite"></p>
+  {% if show_email_setup_link %}
+  <p class="email-verify__setup">
+    <a href="{% url 'email_smtp_setup' %}">Configurer l'envoi Gmail (une fois)</a>
+  </p>
+  {% endif %}
+</div>

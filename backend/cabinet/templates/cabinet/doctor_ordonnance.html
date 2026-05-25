@@ -1,0 +1,247 @@
+{% extends "accounts/base_doctor.html" %}
+{% load static %}
+{% block title %}Documents médicaux — CardioSoin{% endblock %}
+{% block nav_ordo %}is-active{% endblock %}
+{% block extra_js %}<script defer src="{% static 'js/doctor-ordonnance-form.js' %}?v=4"></script>{% endblock %}
+{% block content %}
+<div class="doctor-ordo-page doctor-docs-hub">
+  <header class="doctor-docs-hub__intro">
+    <h1 class="cs-hero-title">Documents médicaux</h1>
+    <p class="cs-lead">
+      Créez une ordonnance, une demande d’analyses, d’examens ou un certificat.
+      Liez un rendez-vous pour que le patient retrouve les pièces dans <strong>Détails</strong> du créneau.
+      Le patient reçoit une notification et peut télécharger chaque document en PDF.
+    </p>
+  </header>
+
+  <script type="application/json" id="rdvs-json-data">{{ rdvs_json|safe }}</script>
+
+  <div class="doctor-docs-layout">
+    <div class="doctor-docs-main">
+      <div class="doctor-docs-panels">
+    <!-- Ordonnance -->
+    <div class="doctor-docs-panel is-active" role="tabpanel" id="panel-ordo" aria-labelledby="tab-ordo" data-panel="ordo">
+      <div class="cs-glass cs-glass--pad cs-glass--lift doctor-ordo-page__card">
+        <h2 class="cs-section doctor-docs-panel__heading">Ordonnance médicamenteuse</h2>
+        <p class="doctor-docs-panel__sub cs-muted">Prescription détaillée ; le PDF est généré après enregistrement (signature manuscrite sur document imprimé).</p>
+        <form method="post" class="doc-form" data-doc-form="ordonnance">
+          {% csrf_token %}
+          <input type="hidden" name="doc_action" value="ordonnance" />
+          <div class="doctor-docs-field-row">
+            <div class="doctor-docs-field">
+              <label class="cs-label" for="patient-ordo">Patient</label>
+              <select class="cs-select doc-patient" name="patient" id="patient-ordo" required data-rdv-target="ordo_rdv">
+                {% for p in patients %}
+                <option value="{{ p.id }}">{{ p.user.get_full_name|default:p.user.username }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="doctor-docs-field">
+              <label class="cs-label" for="ordo_rdv">Rendez-vous lié <span class="cs-muted">(optionnel)</span></label>
+              <select class="cs-select doc-rdv" name="ordo_rdv" id="ordo_rdv">
+                <option value="">— Aucun —</option>
+              </select>
+            </div>
+          </div>
+          <h3 class="cs-section doctor-docs-subhead">Médicaments</h3>
+          <div id="ordo-med-rows" class="ordo-med-rows">
+            <div class="ordo-med-row cs-glass cs-glass--pad">
+              <div class="ordo-med-row__grid">
+                <input class="cs-input" type="text" name="med_nom" placeholder="Nom du médicament" autocomplete="off">
+                <input class="cs-input" type="text" name="med_dosage" placeholder="Dosage" autocomplete="off">
+                <input class="cs-input" type="text" name="med_duree" placeholder="Durée (ex. 7 jours)" autocomplete="off">
+                <textarea class="cs-input ordo-med-instructions" name="med_inst" rows="2" placeholder="Instructions (posologie, repas, etc.)"></textarea>
+              </div>
+            </div>
+          </div>
+          <button type="button" class="cs-btn cs-btn--ghost" id="ordo-med-add">+ Ajouter une ligne</button>
+          <div class="cs-form-actions doctor-docs-actions">
+            <button type="submit" class="cs-btn">Enregistrer l’ordonnance</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Bilan -->
+    <div class="doctor-docs-panel" role="tabpanel" id="panel-bilan" aria-labelledby="tab-bilan" hidden data-panel="bilan">
+      <div class="cs-glass cs-glass--pad cs-glass--lift doctor-ordo-page__card">
+        <h2 class="cs-section doctor-docs-panel__heading">Demande d’analyses / bilan biologique</h2>
+        <p class="doctor-docs-panel__sub cs-muted">Cochez les analyses demandées ; le laboratoire pourra s’appuyer sur le PDF.</p>
+        <form method="post" class="doc-form" data-doc-form="bilan">
+          {% csrf_token %}
+          <input type="hidden" name="doc_action" value="bilan" />
+          <div class="doctor-docs-field-row">
+            <div class="doctor-docs-field">
+              <label class="cs-label" for="patient-bilan">Patient</label>
+              <select class="cs-select doc-patient" name="bilan_patient" id="patient-bilan" required data-rdv-target="bilan_rdv">
+                {% for p in patients %}
+                <option value="{{ p.id }}">{{ p.user.get_full_name|default:p.user.username }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="doctor-docs-field">
+              <label class="cs-label" for="bilan_rdv">Rendez-vous lié <span class="cs-muted">(optionnel)</span></label>
+              <select class="cs-select doc-rdv" name="bilan_rdv" id="bilan_rdv">
+                <option value="">— Aucun —</option>
+              </select>
+            </div>
+          </div>
+          <div class="doc-check-grid doc-check-grid--dense">
+            {% for key, label in bilan_items %}
+            <label class="doc-check"><input type="checkbox" name="bilan_items" value="{{ key }}"> {{ label }}</label>
+            {% endfor %}
+          </div>
+          <label class="cs-label" for="bilan_commentaire">Précisions <span class="cs-muted">(optionnel)</span></label>
+          <textarea class="cs-input" name="bilan_commentaire" id="bilan_commentaire" rows="3" placeholder="Consignes pour le laboratoire (jeûne, urgence…)"></textarea>
+          <div class="cs-form-actions doctor-docs-actions">
+            <button type="submit" class="cs-btn">Enregistrer la demande</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Examens -->
+    <div class="doctor-docs-panel" role="tabpanel" id="panel-examens" aria-labelledby="tab-examens" hidden data-panel="examens">
+      <div class="cs-glass cs-glass--pad cs-glass--lift doctor-ordo-page__card">
+        <h2 class="cs-section doctor-docs-panel__heading">Demande d’examens</h2>
+        <p class="doctor-docs-panel__sub cs-muted">Examens cardiologiques ou complémentaires prescrits au patient.</p>
+        <form method="post" class="doc-form" data-doc-form="examens">
+          {% csrf_token %}
+          <input type="hidden" name="doc_action" value="examens" />
+          <div class="doctor-docs-field-row">
+            <div class="doctor-docs-field">
+              <label class="cs-label" for="patient-exam">Patient</label>
+              <select class="cs-select doc-patient" name="exam_patient" id="patient-exam" required data-rdv-target="exam_rdv">
+                {% for p in patients %}
+                <option value="{{ p.id }}">{{ p.user.get_full_name|default:p.user.username }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="doctor-docs-field">
+              <label class="cs-label" for="exam_rdv">Rendez-vous lié <span class="cs-muted">(optionnel)</span></label>
+              <select class="cs-select doc-rdv" name="exam_rdv" id="exam_rdv">
+                <option value="">— Aucun —</option>
+              </select>
+            </div>
+          </div>
+          <div class="doc-check-grid doc-check-grid--dense">
+            {% for key, label in examen_items %}
+            <label class="doc-check"><input type="checkbox" name="examen_items" value="{{ key }}"> {{ label }}</label>
+            {% endfor %}
+          </div>
+          <label class="cs-label" for="exam_commentaire">Précisions <span class="cs-muted">(optionnel)</span></label>
+          <textarea class="cs-input" name="exam_commentaire" id="exam_commentaire" rows="3" placeholder="Indication clinique, urgence, côté…"></textarea>
+          <div class="cs-form-actions doctor-docs-actions">
+            <button type="submit" class="cs-btn">Enregistrer la demande</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Certificat -->
+    <div class="doctor-docs-panel" role="tabpanel" id="panel-cert" aria-labelledby="tab-cert" hidden data-panel="cert">
+      <div class="cs-glass cs-glass--pad cs-glass--lift doctor-ordo-page__card">
+        <h2 class="cs-section doctor-docs-panel__heading">Certificat médical cardiologique</h2>
+        <form method="post" class="doc-form" data-doc-form="certificat">
+          {% csrf_token %}
+          <input type="hidden" name="doc_action" value="certificat" />
+          <div class="doctor-docs-field-row">
+            <div class="doctor-docs-field">
+              <label class="cs-label" for="patient-cert">Patient</label>
+              <select class="cs-select doc-patient cert-preview-input" name="cert_patient" id="patient-cert" required data-rdv-target="cert_rdv">
+                {% for p in patients %}
+                <option value="{{ p.id }}">{{ p.user.get_full_name|default:p.user.username }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="doctor-docs-field">
+              <label class="cs-label" for="cert_rdv">Rendez-vous lié <span class="cs-muted">(optionnel)</span></label>
+              <select class="cs-select doc-rdv" name="cert_rdv" id="cert_rdv">
+                <option value="">— Aucun —</option>
+              </select>
+            </div>
+          </div>
+          <fieldset class="doctor-cert-fieldset">
+            <legend class="cs-section doctor-cert-fieldset__legend">Type de certificat</legend>
+            <select class="cs-select cert-preview-input" name="certificat_type" id="certificat_type" required>
+              <option value="">— Choisir —</option>
+              {% for key, label in certificat_types %}
+              <option value="{{ key }}">{{ label }}</option>
+              {% endfor %}
+            </select>
+          </fieldset>
+
+          <fieldset class="doctor-cert-fieldset">
+            <legend class="cs-section doctor-cert-fieldset__legend">Problème / motif médical</legend>
+            <p class="doctor-cert-fieldset__help cs-muted">Ex. : une arythmie cardiaque, un suivi post-infarctus, une hypertension mal équilibrée…</p>
+            <textarea class="cs-input cert-preview-input" name="cert_probleme" id="cert_probleme" rows="3" required placeholder="Décrivez le problème ou le contexte clinique…"></textarea>
+          </fieldset>
+
+          <fieldset class="doctor-cert-fieldset">
+            <legend class="cs-section doctor-cert-fieldset__legend">Durée (repos à domicile)</legend>
+            <p class="doctor-cert-fieldset__help cs-muted">Laissez vide si le certificat ne prévoit pas de repos (ex. simple aptitude sportive).</p>
+            <div class="doctor-docs-field-row">
+              <div class="doctor-docs-field">
+                <label class="cs-label" for="cert_duree_jours">Nombre de jours</label>
+                <input class="cs-input cert-preview-input" type="number" name="cert_duree_jours" id="cert_duree_jours" min="0" max="365" step="1" placeholder="Ex. 3">
+              </div>
+              <div class="doctor-docs-field">
+                <label class="cs-label" for="cert_date_debut">À compter du</label>
+                <input class="cs-input cert-preview-input" type="date" name="cert_date_debut" id="cert_date_debut" value="{{ date_aujourdhui }}">
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset class="doctor-cert-fieldset">
+            <legend class="cs-section doctor-cert-fieldset__legend">Précisions (optionnel)</legend>
+            <textarea class="cs-input cert-preview-input" name="cert_precisions" id="cert_precisions" rows="2" placeholder="Phrase complémentaire ajoutée au certificat…"></textarea>
+          </fieldset>
+
+          <div class="doctor-cert-apercu cs-glass cs-glass--pad" id="cert-apercu-box" data-apercu-url="{% url 'doctor_certificat_apercu' %}">
+            <p class="doctor-cert-apercu__title">Aperçu du texte (généré automatiquement)</p>
+            <div class="doctor-cert-apercu__body" id="cert-apercu-text">Renseignez le patient, le type et le problème pour prévisualiser le certificat.</div>
+          </div>
+          <div class="cs-form-actions doctor-docs-actions">
+            <button type="submit" class="cs-btn">Enregistrer le certificat</button>
+          </div>
+        </form>
+      </div>
+    </div>
+      </div>
+    </div>
+    <aside class="doctor-docs-sidebar" aria-labelledby="doctor-docs-nav-label">
+      <p class="doctor-docs-sidebar__label" id="doctor-docs-nav-label">Type de document</p>
+      <div class="doctor-docs-toolbar" role="tablist" aria-label="Type de document">
+        <button type="button" class="doctor-docs-tab is-active" role="tab" aria-selected="true" aria-controls="panel-ordo" id="tab-ordo" data-tab-target="ordo">
+          <span class="doctor-docs-tab__ic doctor-docs-tab__ic--pill" aria-hidden="true">Rx</span>
+          <span class="doctor-docs-tab__text">
+            <span class="doctor-docs-tab__title">Ordonnance</span>
+            <span class="doctor-docs-tab__hint">Médicaments</span>
+          </span>
+        </button>
+        <button type="button" class="doctor-docs-tab" role="tab" aria-selected="false" aria-controls="panel-bilan" id="tab-bilan" data-tab-target="bilan">
+          <span class="doctor-docs-tab__ic doctor-docs-tab__ic--lab" aria-hidden="true">Bio</span>
+          <span class="doctor-docs-tab__text">
+            <span class="doctor-docs-tab__title">Bilan</span>
+            <span class="doctor-docs-tab__hint">Analyses</span>
+          </span>
+        </button>
+        <button type="button" class="doctor-docs-tab" role="tab" aria-selected="false" aria-controls="panel-examens" id="tab-examens" data-tab-target="examens">
+          <span class="doctor-docs-tab__ic doctor-docs-tab__ic--exam" aria-hidden="true">Img</span>
+          <span class="doctor-docs-tab__text">
+            <span class="doctor-docs-tab__title">Examens</span>
+            <span class="doctor-docs-tab__hint">Imagerie &amp; cardio</span>
+          </span>
+        </button>
+        <button type="button" class="doctor-docs-tab" role="tab" aria-selected="false" aria-controls="panel-cert" id="tab-cert" data-tab-target="cert">
+          <span class="doctor-docs-tab__ic doctor-docs-tab__ic--cert" aria-hidden="true">Cer</span>
+          <span class="doctor-docs-tab__text">
+            <span class="doctor-docs-tab__title">Certificat</span>
+            <span class="doctor-docs-tab__hint">Types médicaux</span>
+          </span>
+        </button>
+      </div>
+    </aside>
+  </div>
+</div>
+{% endblock %}

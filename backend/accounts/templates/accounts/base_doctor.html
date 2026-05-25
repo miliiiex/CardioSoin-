@@ -1,0 +1,74 @@
+{% extends "accounts/base_portal.html" %}
+{% block html_attrs %} data-patient-theme="light"{% endblock %}
+{% block body_class %}doctor-cabinet staff-nude{% endblock %}
+{% block shell_class %}cs-main--doctor cs-shell--desk{% endblock %}
+{% block page_wrap %}
+<div class="cs-desk">
+    <aside class="cs-desk-side" aria-label="Espace médecin">
+        <a href="{% url 'doctor_desk' %}" class="cs-desk-brand" style="text-decoration:none;">
+            <span class="cs-desk-brand__mark" aria-hidden="true">▸</span>
+            <span>
+                <span class="cs-desk-brand__title">CardioSoin</span>
+                <span class="cs-desk-brand__tag">Espace médecin</span>
+            </span>
+        </a>
+        <nav class="cs-desk-nav" aria-label="Navigation">
+            <a href="{% url 'doctor_desk' %}" class="cs-desk-nav__item {% block nav_desk %}{% endblock %}">
+                <span class="cs-desk-nav__ic" aria-hidden="true">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5 12 2l9 7.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5Z"/><path d="M9 22V12h6v10"/></svg>
+                </span>
+                Accueil
+            </a>
+            <a href="{% url 'doctor_agenda' %}" class="cs-desk-nav__item {% block nav_agenda %}{% endblock %}">
+                <span class="cs-desk-nav__ic" aria-hidden="true">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                </span>
+                Agenda
+            </a>
+            <a href="{% url 'patient_list' %}" class="cs-desk-nav__item {% block nav_dossiers %}{% endblock %}">
+                <span class="cs-desk-nav__ic" aria-hidden="true">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                </span>
+                Dossiers patients
+            </a>
+            <a href="{% url 'doctor_ordonnance_nouveau' %}" class="cs-desk-nav__item {% block nav_ordo %}{% endblock %}">
+                <span class="cs-desk-nav__ic" aria-hidden="true">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M12 18h4M12 14h4M8 10h.01"/></svg>
+                </span>
+                Documents médicaux
+            </a>
+            <a href="{% url 'doctor_score' %}" class="cs-desk-nav__item {% block nav_score %}{% endblock %}">
+                <span class="cs-desk-nav__ic" aria-hidden="true">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0l-.3.2-.2-.2a5.5 5.5 0 0 0-7.7 0 5.5 5.5 0 0 0 0 7.8L12 21l7.1-6.5a5.4 5.4 0 0 0 0-7.8Z"/></svg>
+                </span>
+                Score cardio
+            </a>
+            <a href="{% url 'doctor_secretaires' %}" class="cs-desk-nav__item {% block nav_sec %}{% endblock %}">
+                <span class="cs-desk-nav__ic" aria-hidden="true">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><path d="M20 8v6M17 11h6"/></svg>
+                </span>
+                Secrétaires
+            </a>
+            <a href="{% url 'staff_profil' %}" class="cs-desk-nav__item {% block nav_profil %}{% endblock %}">
+                <span class="cs-desk-nav__ic" aria-hidden="true">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20a8 8 0 0 1 16 0"/></svg>
+                </span>
+                Profil
+            </a>
+            <a href="{% url 'doctor_absence' %}" class="cs-desk-nav__item {% block nav_abs %}{% endblock %}">
+                <span class="cs-desk-nav__ic" aria-hidden="true">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2h6M12 9v3l2 1"/><circle cx="12" cy="14" r="8"/></svg>
+                </span>
+                Absence
+            </a>
+        </nav>
+        <div class="cs-desk-side__foot">
+            <a href="{% url 'logout' %}" class="cs-desk-nav__item cs-desk-nav__item--logout">Déconnexion</a>
+        </div>
+    </aside>
+    <div class="cs-desk-body">
+        {% block doctor_toolbar %}{% endblock %}
+        <main class="cs-desk-main">{% block content %}{% endblock %}</main>
+    </div>
+</div>
+{% endblock page_wrap %}

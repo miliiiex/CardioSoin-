@@ -1,0 +1,117 @@
+{% extends "accounts/base_doctor.html" %}
+{% load static %}
+{% block title %}Analyse ECG — CardioSoin{% endblock %}
+{% block body_class %}doctor-cabinet staff-nude score-framing-page{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/doctor-score.css' %}?v=6">
+{% endblock %}
+{% block nav_score %}is-active{% endblock %}
+{% block content %}
+<div class="score-page-head">
+  <h1 class="score-page-head__title">Analyse ECG (MIT-BIH / PhysioNet)</h1>
+  <ul class="score-legend" aria-label="Niveaux de l’indice signal (pédagogique)">
+    <li class="score-legend__item"><span class="score-legend__dot score-legend__dot--low" aria-hidden="true"></span> &lt; 22 % — faible</li>
+    <li class="score-legend__item"><span class="score-legend__dot score-legend__dot--mid" aria-hidden="true"></span> 22–48 % — modéré</li>
+    <li class="score-legend__item"><span class="score-legend__dot score-legend__dot--high" aria-hidden="true"></span> &gt; 48 % — élevé</li>
+  </ul>
+</div>
+
+{% if ecg_db_unavailable %}
+<section class="score-ecg-section score-ecg-section--warn cs-glass cs-glass--pad cs-glass--lift" aria-labelledby="ecg-unavail-title">
+  <h2 id="ecg-unavail-title" class="score-ecg-head__title">Analyse ECG — configuration requise</h2>
+  <p class="score-ecg-migrate-warn">
+    La table <code>cabinet_ecganalyse</code> n’existe pas encore dans votre base MySQL
+    (<code>pfa_medical</code>). Les migrations n’ont probablement pas été appliquées sur MySQL
+    (par exemple si <code>DJANGO_USE_SQLITE=1</code> était défini lors du <code>migrate</code>).
+  </p>
+  <ol class="score-ecg-migrate-steps">
+    <li>Fermez ou ignorez SQLite pour cette commande : dans PowerShell, <code>Remove-Item Env:DJANGO_USE_SQLITE -ErrorAction SilentlyContinue</code></li>
+    <li>Placez-vous dans le dossier <code>backend</code> du projet.</li>
+    <li>Exécutez : <code>python manage.py migrate</code></li>
+    <li>Redémarrez le serveur Django puis rechargez cette page.</li>
+  </ol>
+</section>
+{% else %}
+<section class="score-ecg-section cs-glass cs-glass--pad cs-glass--lift" aria-labelledby="ecg-title">
+  <div class="score-ecg-head">
+    <h2 id="ecg-title" class="score-ecg-head__title">Analyse ECG — MIT-BIH (PhysioNet)</h2>
+    <p class="score-ecg-head__note">
+      Indice pédagogique basé sur le signal et les annotations de battements (extrasystoles, FC).
+      Ce n’est pas un diagnostic d’arrêt cardiaque ni un substitut à l’avis médical.
+      Connexion Internet requise pour télécharger les enregistrements depuis PhysioNet
+      (ou définir la variable d’environnement <code>MITBIH_LOCAL_DIR</code> vers une copie locale du dossier MIT-BIH).
+    </p>
+  </div>
+  <div class="score-ecg-layout">
+    <div class="score-ecg-col score-ecg-col--viz">
+      <h3 class="score-ecg-subh">Évolution des analyses ECG (indice %)</h3>
+      <div id="ecg-risk-chart" class="score-chart-wrap score-chart-wrap--saas score-chart-wrap--ecg" aria-live="polite"></div>
+      <h3 class="score-ecg-subh">Dernier signal (aperçu)</h3>
+      <div class="score-ecg-canvas-wrap">
+        <canvas id="ecg-wave-canvas" width="900" height="220" aria-label="Aperçu onde ECG"></canvas>
+      </div>
+      <h3 class="score-ecg-subh">Répartition des symboles d’annotation (MIT)</h3>
+      <div id="ecg-beat-bars" class="score-ecg-beat-bars" aria-live="polite"></div>
+    </div>
+    <div class="score-ecg-col score-ecg-col--side">
+      {% if last_ecg %}
+      <div class="score-side-card score-side-card--flash">
+        <h3 class="cs-section" style="margin-top:0;">Dernière analyse</h3>
+        <p class="score-patient-tag">{{ last_ecg.patient.user.get_full_name|default:last_ecg.patient.user.username }}</p>
+        <p class="cs-muted" style="font-size:0.82rem;margin:0;">Enregistrement {{ last_ecg.dataset }}/{{ last_ecg.record_id }} — {{ last_ecg.duree_s|floatformat:1 }} s @ {{ last_ecg.fs|floatformat:0 }} Hz</p>
+        <p class="score-res-big">{{ last_ecg.risk_percent|floatformat:1 }}&nbsp;% <span class="cs-muted">ECG seul : {{ last_ecg.risk_ecg_seul|floatformat:1 }}&nbsp;%</span></p>
+        <p class="cs-muted" style="margin:0.25rem 0 0;">Niveau : <strong>{{ last_ecg.get_niveau_display }}</strong></p>
+        <div class="cs-gauge" aria-hidden="true">
+          <span class="{% if last_ecg.niveau == 'faible' %}cs-risk-faible{% elif last_ecg.niveau == 'modéré' %}cs-risk-modere{% else %}cs-risk-eleve{% endif %}" style="width: min(100%, {{ last_ecg.risk_percent }}%);"></span>
+        </div>
+      </div>
+      {% else %}
+      <div class="score-side-card">
+        <h3 class="cs-section" style="margin-top:0;">Aucune analyse ECG</h3>
+        <p class="cs-muted" style="font-size:0.9rem;margin:0;">Lancez une analyse ci-dessous pour remplir les graphiques.</p>
+      </div>
+      {% endif %}
+      <div class="score-ecg-api-status" id="ecg-api-status" role="status"></div>
+    </div>
+  </div>
+  <div class="score-ecg-actions-grid">
+    <form method="post" class="score-ecg-form">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="ecg_mitbih">
+      <label class="cs-label" for="ecg_patient">Patient</label>
+      <select class="cs-select" name="patient" id="ecg_patient" required>
+        {% for p in patients %}
+        <option value="{{ p.id }}">{{ p.user.get_full_name|default:p.user.username }}</option>
+        {% endfor %}
+      </select>
+      <label class="cs-label" for="mit_record">Enregistrement MIT-BIH</label>
+      <select class="cs-select" name="mit_record" id="mit_record">
+        {% for rid, label in mitbih_records %}
+        <option value="{{ rid }}">{{ label }}</option>
+        {% endfor %}
+      </select>
+      <label class="cs-label" style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;">
+        <input type="checkbox" name="blend_framingham" value="1" id="blend_framingham"> Combiner au dernier score Framingham du patient (52 % ECG / 48 % clinique)
+      </label>
+      <div class="cs-form-actions">
+        <button type="submit" class="cs-btn">Analyser et enregistrer</button>
+        <button type="button" class="cs-btn cs-btn--ghost" id="ecg-analyze-live">Analyser (aperçu temps réel, enregistre aussi)</button>
+      </div>
+    </form>
+  </div>
+</section>
+{% endif %}
+{% endblock %}
+{% block extra_js %}
+{% if not ecg_db_unavailable %}
+{{ ecg_chart_data|json_script:"ecg-risk-data" }}
+{% if last_ecg %}
+{{ last_ecg.waveform|json_script:"ecg-waveform-data" }}
+{{ last_ecg.beat_counts|json_script:"ecg-beat-data" }}
+{% endif %}
+<script src="{% static 'js/doctor-ecg-charts.js' %}" defer></script>
+<script>
+  window.CS_ECG_ANALYZE_URL = "{% url 'doctor_ecg_analyze_api' %}";
+</script>
+{% endif %}
+{% endblock %}

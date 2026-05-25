@@ -1,0 +1,30 @@
+{% extends "accounts/base_patient_shell.html" %}
+{% load static %}
+{% block title %}Annuler un RDV — CardioSoin{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/patient-inner-pages.css' %}">{% endblock %}
+{% block patient_toolbar %}
+<div class="patient-page-head">
+  <div></div>
+  <div class="pdash__top-meta-actions">
+    {% include "accounts/partials/patient_theme_toggle.html" %}
+  </div>
+</div>
+{% endblock %}
+{% block content %}
+<section class="pdash-feed">
+  <div class="pdash-feed__head">
+    <h2 class="pdash-feed__title">Confirmer l’annulation</h2>
+    <p class="pdash-feed__sub">
+      Rendez-vous du <strong>{{ rdv.date_heure|date:"d/m/Y à H:i" }}</strong> — Dr {{ rdv.medecin.user.get_full_name|default:rdv.medecin.user.username }}
+    </p>
+  </div>
+
+  <form method="post">
+    {% csrf_token %}
+    <div class="patient-page-actions">
+      <button type="submit" class="patient-btn patient-btn--danger">Confirmer l’annulation</button>
+      <a href="{% url 'patient_space' %}" class="patient-btn patient-btn--ghost" style="text-decoration:none;">Retour</a>
+    </div>
+  </form>
+</section>
+{% endblock %}

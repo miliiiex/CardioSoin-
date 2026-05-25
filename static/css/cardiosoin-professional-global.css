@@ -1,0 +1,1023 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+/**
+ * Thème institutionnel clair — appliqué à tout le site via <html class="cs-pro-site">
+ * Recolore .cs-page / glass / bureau sans dupliquer cardiosoin-glass.css
+ */
+html.cs-pro-site {
+  --mint-1: #84a471;
+  --mint-2: #93ae82;
+  --mint-3: #b9d1a9;
+  --pro-gold: #c9a256;
+}
+
+html.cs-pro-site {
+  color-scheme: light;
+}
+
+html.cs-pro-site {
+  --cs-ink: #e8f2ec;
+  --cs-ink-mid: #dceee4;
+  --cs-text: #1a2e24;
+  --cs-muted: #5c7066;
+  --cs-muted2: #486056;
+  --cs-teal: #84a471;
+  --cs-teal-dim: rgba(132, 164, 113, 0.14);
+  --cs-teal-glow: rgba(132, 164, 113, 0.35);
+  --cs-cyan: #93ae82;
+  --cs-glass: rgba(255, 255, 255, 0.82);
+  --cs-glass2: rgba(248, 252, 250, 0.92);
+  --cs-stroke: rgba(22, 45, 35, 0.1);
+  --cs-stroke-bright: rgba(132, 164, 113, 0.32);
+  --cs-shadow: 0 20px 50px rgba(22, 50, 40, 0.08);
+  --cs-radius: 0;
+  --cs-radius-sm: 0;
+}
+
+html.cs-pro-site .cs-page {
+  color: var(--cs-text);
+  background: linear-gradient(165deg, #eaf4ee 0%, #f6faf8 42%, #f8fbfa 100%);
+}
+
+html.cs-pro-site .cs-bg {
+  background:
+    radial-gradient(ellipse 100% 70% at 50% -20%, rgba(132, 164, 113, 0.12), transparent 55%),
+    radial-gradient(ellipse 60% 50% at 100% 30%, rgba(201, 162, 86, 0.06), transparent 50%),
+    linear-gradient(165deg, #f0faf5 0%, #e8f2ec 55%, #f5fbf8 100%);
+}
+
+html.cs-pro-site .cs-orb {
+  opacity: 0.32;
+}
+
+html.cs-pro-site .cs-orb--1 {
+  background: linear-gradient(135deg, rgba(132, 164, 113, 0.35), rgba(147, 174, 130, 0.2));
+}
+
+html.cs-pro-site .cs-orb--2 {
+  background: linear-gradient(135deg, rgba(185, 209, 169, 0.35), rgba(132, 164, 113, 0.15));
+}
+
+html.cs-pro-site .cs-orb--3 {
+  background: rgba(215, 235, 225, 0.6);
+}
+
+html.cs-pro-site .cs-grid {
+  background-image:
+    linear-gradient(rgba(22, 45, 35, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(22, 45, 35, 0.04) 1px, transparent 1px);
+  opacity: 0.45;
+}
+
+/* Typo : titre institutionnel serif */
+html.cs-pro-site .cs-brand-text {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-weight: 700;
+  font-size: 1.5rem;
+  background: linear-gradient(120deg, #2d5542, var(--mint-1));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+html.cs-pro-site .cs-brand-sub {
+  color: var(--cs-muted);
+  letter-spacing: 0.08em;
+  font-size: 0.72rem;
+}
+
+html.cs-pro-site .cs-brand-mark {
+  background: linear-gradient(145deg, rgba(132, 164, 113, 0.25), rgba(215, 235, 225, 0.6));
+  border-color: var(--cs-stroke-bright);
+  color: var(--mint-1);
+}
+
+html.cs-pro-site .cs-hero-title {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-weight: 700;
+  color: var(--cs-text);
+  letter-spacing: -0.02em;
+}
+
+html.cs-pro-site .cs-lead {
+  color: var(--cs-muted);
+}
+
+html.cs-pro-site .cs-back {
+  color: var(--mint-1);
+  background: rgba(255, 255, 255, 0.75);
+  border-color: var(--cs-stroke);
+}
+
+html.cs-pro-site .cs-back:hover {
+  background: rgba(215, 235, 225, 0.75);
+  border-color: var(--cs-stroke-bright);
+}
+
+html.cs-pro-site .cs-glass {
+  border-color: var(--cs-stroke);
+  color: inherit;
+}
+
+html.cs-pro-site .cs-glass--lift {
+  box-shadow:
+    var(--cs-shadow),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+html.cs-pro-site ul.cs-messages li {
+  background: rgba(254, 252, 250, 0.95);
+  border: 1px solid rgba(132, 164, 113, 0.25);
+  color: var(--cs-text);
+}
+
+/* Bureau médecin / secrétaire */
+html.cs-pro-site .cs-desk-side {
+  border-right-color: rgba(22, 45, 35, 0.1);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(240, 250, 245, 0.9) 100%);
+  box-shadow: inset -1px 0 0 rgba(22, 45, 35, 0.05);
+}
+
+html.cs-pro-site .cs-desk-brand {
+  border-bottom-color: rgba(22, 45, 35, 0.08);
+  color: var(--cs-text);
+}
+
+html.cs-pro-site .cs-desk-brand__mark {
+  background: linear-gradient(145deg, rgba(132, 164, 113, 0.35), rgba(215, 235, 225, 0.9));
+  border-color: rgba(132, 164, 113, 0.35);
+  color: var(--mint-1);
+  box-shadow: 0 4px 18px rgba(132, 164, 113, 0.15);
+}
+
+html.cs-pro-site .cs-desk-brand__title {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-weight: 700;
+  font-size: 1.22rem;
+  color: var(--cs-text);
+}
+
+html.cs-pro-site .cs-desk-brand__tag {
+  color: var(--mint-1);
+}
+
+html.cs-pro-site .cs-desk-nav__item {
+  color: var(--cs-muted);
+}
+
+html.cs-pro-site .cs-desk-nav__item:hover {
+  background: rgba(132, 164, 113, 0.1);
+  color: var(--cs-text);
+  border-color: rgba(132, 164, 113, 0.18);
+}
+
+html.cs-pro-site .cs-desk-nav__item.is-active {
+  background: linear-gradient(120deg, rgba(132, 164, 113, 0.18), rgba(185, 209, 169, 0.14));
+  color: var(--cs-text);
+  border-color: rgba(132, 164, 113, 0.28);
+  box-shadow: 0 4px 14px rgba(22, 45, 35, 0.06);
+}
+
+html.cs-pro-site .cs-desk-nav__item.is-active .cs-desk-nav__ic {
+  color: var(--mint-1);
+}
+
+html.cs-pro-site .cs-desk-nav__ic {
+  color: var(--mint-1);
+}
+
+html.cs-pro-site .cs-desk-side__foot {
+  border-top-color: rgba(22, 45, 35, 0.1);
+}
+
+html.cs-pro-site .cs-desk-nav__item:focus-visible {
+  outline-color: rgba(132, 164, 113, 0.55);
+}
+
+html.cs-pro-site .cs-desk-body {
+  color: var(--cs-text);
+}
+
+html.cs-pro-site main .cs-hero-title,
+html.cs-pro-site .cs-desk-main .cs-hero-title {
+  color: var(--cs-text);
+}
+
+/* Formulaires (labels / inputs utilisés par staff login + glass) */
+html.cs-pro-site .cs-label {
+  color: var(--cs-muted);
+}
+
+html.cs-pro-site .cs-input,
+html.cs-pro-site textarea.cs-input,
+html.cs-pro-site select.cs-input {
+  background: #fff !important;
+  border-color: rgba(132, 164, 113, 0.22);
+  color: var(--cs-text);
+}
+
+html.cs-pro-site .cs-input:focus {
+  border-color: var(--mint-1);
+  box-shadow: 0 0 0 3px rgba(132, 164, 113, 0.15);
+}
+
+/* Segments et pills */
+html.cs-pro-site .cs-seg {
+  border-color: var(--cs-stroke);
+}
+
+html.cs-pro-site .cs-seg__btn {
+  background: rgba(248, 252, 250, 0.9);
+  color: var(--cs-muted);
+  border-right-color: var(--cs-stroke);
+}
+
+html.cs-pro-site .cs-seg__btn.is-active {
+  background: rgba(132, 164, 113, 0.15);
+  color: var(--cs-text);
+}
+
+/* Staff login carte */
+html.cs-pro-site .staff-login__card {
+  background: linear-gradient(155deg, rgba(255, 255, 255, 0.94) 0%, rgba(240, 250, 245, 0.88) 100%);
+  border: 1px solid rgba(132, 164, 113, 0.22);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.9) inset,
+    var(--cs-shadow),
+    0 0 60px -20px rgba(132, 164, 113, 0.2);
+}
+
+html.cs-pro-site .staff-login__card::before {
+  background: linear-gradient(90deg, var(--mint-1), var(--mint-3), var(--pro-gold), var(--mint-2));
+}
+
+html.cs-pro-site .staff-login__back {
+  color: var(--mint-1);
+  background: rgba(255, 255, 255, 0.75);
+  border-color: rgba(132, 164, 113, 0.25);
+}
+
+html.cs-pro-site .staff-login__back:hover {
+  color: #3d7d5c;
+  background: rgba(215, 235, 225, 0.85);
+}
+
+html.cs-pro-site .staff-login__title {
+  color: var(--cs-text);
+}
+
+html.cs-pro-site .staff-login__title > span {
+  background: linear-gradient(120deg, var(--mint-1), var(--mint-3));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+html.cs-pro-site .staff-login__lead {
+  color: var(--cs-muted);
+}
+
+html.cs-pro-site .staff-login__hint {
+  color: var(--cs-muted2);
+}
+
+html.cs-pro-site .staff-login__hint-a {
+  color: var(--mint-1);
+}
+
+html.cs-pro-site .staff-login__lock {
+  background: linear-gradient(145deg, rgba(132, 164, 113, 0.15), rgba(255, 255, 255, 0.9));
+  border-color: rgba(132, 164, 113, 0.3);
+}
+
+html.cs-pro-site .staff-login__submit {
+  background: linear-gradient(135deg, #4a8f68, var(--mint-1));
+  box-shadow: 0 4px 22px rgba(132, 164, 113, 0.35);
+}
+
+/* Badges et sections courantes */
+html.cs-pro-site .cs-badge {
+  background: rgba(132, 164, 113, 0.12);
+  color: var(--cs-text);
+  border: 1px solid rgba(132, 164, 113, 0.22);
+}
+
+html.cs-pro-site .cs-section {
+  color: var(--cs-text);
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+html.cs-pro-site .cs-muted,
+html.cs-pro-site .ap-muted {
+  color: var(--cs-muted);
+}
+
+html.cs-pro-site .cs-nav a,
+html.cs-pro-site a.cs-link-pill {
+  background: rgba(255, 255, 255, 0.75);
+  color: var(--cs-text);
+  border-color: var(--cs-stroke);
+}
+
+html.cs-pro-site .cs-nav a:hover,
+html.cs-pro-site a.cs-link-pill:hover {
+  background: rgba(215, 235, 225, 0.65);
+  border-color: var(--cs-stroke-bright);
+  box-shadow: 0 4px 14px rgba(132, 164, 113, 0.12);
+}
+
+html.cs-pro-site .cs-nav a.is-active {
+  background: linear-gradient(135deg, rgba(132, 164, 113, 0.22), rgba(185, 209, 169, 0.15));
+  color: var(--cs-text);
+  border-color: rgba(132, 164, 113, 0.35);
+}
+
+html.cs-pro-site .cs-select,
+html.cs-pro-site .cs-textarea {
+  background: #fff !important;
+  border-color: rgba(132, 164, 113, 0.22);
+  color: var(--cs-text);
+}
+
+html.cs-pro-site .cs-select:focus,
+html.cs-pro-site .cs-textarea:focus {
+  box-shadow: 0 0 0 3px rgba(132, 164, 113, 0.15);
+}
+
+html.cs-pro-site .cs-btn {
+  color: #fafffb;
+  background: linear-gradient(135deg, #5c7248, #84a471);
+  box-shadow: 0 8px 22px rgba(132, 164, 113, 0.32);
+}
+
+html.cs-pro-site .cs-btn:hover {
+  box-shadow: 0 12px 28px rgba(132, 164, 113, 0.38);
+}
+
+html.cs-pro-site .cs-btn--ghost {
+  background: rgba(255, 255, 255, 0.8);
+  color: var(--mint-1);
+  border-color: var(--cs-stroke);
+}
+
+html.cs-pro-site .cs-table-wrap {
+  background: rgba(255, 255, 255, 0.65);
+}
+
+html.cs-pro-site .cs-table th {
+  background: rgba(215, 235, 225, 0.45);
+  color: var(--cs-muted2);
+}
+
+html.cs-pro-site .cs-table td {
+  border-bottom-color: rgba(22, 45, 35, 0.08);
+  color: var(--cs-text);
+}
+
+html.cs-pro-site .cs-badge--alert {
+  background: rgba(132, 164, 113, 0.18);
+  color: #275a42;
+  border-color: rgba(132, 164, 113, 0.35);
+}
+
+/* Angles droits : éléments encore arrondis dans cardiosoin-glass.css */
+html.cs-pro-site .cs-brand-mark,
+html.cs-pro-site .cs-back,
+html.cs-pro-site .cs-nav a,
+html.cs-pro-site a.cs-link-pill,
+html.cs-pro-site .cs-badge,
+html.cs-pro-site .cs-gauge,
+html.cs-pro-site .cs-gauge span,
+html.cs-pro-site .cs-desk-brand__mark,
+html.cs-pro-site .cs-desk-nav__item,
+html.cs-pro-site .cs-seg,
+html.cs-pro-site .desk-stat,
+html.cs-pro-site .desk-curve,
+html.cs-pro-site .desk-risk-snap,
+html.cs-pro-site .desk-risk-snap__badge,
+html.cs-pro-site .desk-hero,
+html.cs-pro-site body.doctor-cabinet .desk-stat::before {
+  border-radius: 0 !important;
+}
+
+/* Espace médecin / secrétaire : palette vitrine (Mint Cream → Verdant Hush, accent Muted Sage) */
+html.cs-pro-site body.staff-nude {
+  --muted-sage: #84a471;
+  --cs-text: #1a2418;
+  --cs-muted: #4d5c46;
+  --cs-muted2: #4d5e54;
+  --cs-glass: rgba(244, 252, 242, 0.78);
+  --cs-glass2: rgba(225, 247, 214, 0.88);
+  --cs-stroke: rgba(26, 36, 24, 0.1);
+  --cs-stroke-bright: rgba(132, 164, 113, 0.32);
+  --cs-shadow: 0 14px 38px rgba(92, 114, 72, 0.07);
+}
+
+html.cs-pro-site body.staff-nude.cs-page {
+  color: var(--cs-text);
+  background: linear-gradient(
+    165deg,
+    #cfedc1 0%,
+    #e1f7d6 36%,
+    #f4fcf2 100%
+  );
+}
+
+html.cs-pro-site body.staff-nude .cs-bg {
+  background:
+    radial-gradient(ellipse 100% 65% at 50% -18%, rgba(185, 209, 169, 0.45), transparent 56%),
+    radial-gradient(ellipse 55% 48% at 100% 28%, rgba(207, 237, 193, 0.35), transparent 52%),
+    linear-gradient(165deg, #e1f7d6 0%, #cfedc1 46%, #f4fcf2 100%);
+}
+
+html.cs-pro-site body.staff-nude .cs-orb {
+  opacity: 0.2;
+}
+
+html.cs-pro-site body.staff-nude .cs-grid {
+  opacity: 0.26;
+  background-image:
+    linear-gradient(rgba(26, 36, 24, 0.028) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(26, 36, 24, 0.028) 1px, transparent 1px);
+}
+
+html.cs-pro-site body.staff-nude .cs-orb--1 {
+  background: linear-gradient(135deg, rgba(132, 164, 113, 0.35), rgba(185, 209, 169, 0.28));
+}
+
+html.cs-pro-site body.staff-nude .cs-orb--2 {
+  background: linear-gradient(135deg, rgba(207, 237, 193, 0.42), rgba(225, 247, 214, 0.32));
+}
+
+html.cs-pro-site body.staff-nude .cs-orb--3 {
+  background: rgba(185, 209, 169, 0.3);
+}
+
+html.cs-pro-site body.staff-nude .cs-glass {
+  background: linear-gradient(
+    165deg,
+    rgba(244, 252, 242, 0.94) 0%,
+    rgba(225, 247, 214, 0.86) 100%
+  );
+  border-color: rgba(132, 164, 113, 0.22);
+  box-shadow: var(--cs-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.42);
+  backdrop-filter: blur(16px) saturate(118%);
+  -webkit-backdrop-filter: blur(16px) saturate(118%);
+}
+
+html.cs-pro-site body.staff-nude .cs-glass--lift {
+  box-shadow: var(--cs-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.48);
+}
+
+html.cs-pro-site body.staff-nude .cs-back {
+  color: var(--muted-sage, #84a471);
+  background: rgba(244, 252, 242, 0.88);
+  border-color: rgba(132, 164, 113, 0.18);
+}
+
+html.cs-pro-site body.staff-nude .cs-back:hover {
+  background: rgba(225, 247, 214, 0.92);
+  border-color: rgba(132, 164, 113, 0.28);
+}
+
+html.cs-pro-site body.staff-nude .cs-nav a,
+html.cs-pro-site body.staff-nude a.cs-link-pill {
+  background: rgba(244, 252, 242, 0.82);
+  border-color: rgba(132, 164, 113, 0.16);
+}
+
+html.cs-pro-site body.staff-nude .cs-nav a:hover,
+html.cs-pro-site body.staff-nude a.cs-link-pill:hover {
+  background: rgba(207, 237, 193, 0.72);
+  border-color: rgba(132, 164, 113, 0.26);
+}
+
+html.cs-pro-site body.staff-nude .cs-nav a.is-active {
+  background: linear-gradient(135deg, rgba(185, 209, 169, 0.45), rgba(207, 237, 193, 0.35));
+  border-color: rgba(132, 164, 113, 0.3);
+}
+
+html.cs-pro-site body.staff-nude .cs-input,
+html.cs-pro-site body.staff-nude textarea.cs-input,
+html.cs-pro-site body.staff-nude select.cs-input,
+html.cs-pro-site body.staff-nude .cs-select,
+html.cs-pro-site body.staff-nude .cs-textarea {
+  background: #f4fcf2 !important;
+  border-color: rgba(132, 164, 113, 0.28) !important;
+  color: var(--cs-text) !important;
+}
+
+html.cs-pro-site body.staff-nude .cs-table-wrap {
+  background: rgba(244, 252, 240, 0.55);
+}
+
+html.cs-pro-site body.staff-nude .cs-table th {
+  background: rgba(189, 220, 161, 0.38);
+  color: var(--cs-muted2);
+}
+
+html.cs-pro-site body.staff-nude .staff-login__card {
+  background: linear-gradient(155deg, rgba(244, 252, 240, 0.96) 0%, rgba(226, 243, 214, 0.9) 100%);
+  border-color: rgba(96, 140, 110, 0.2);
+}
+
+html.cs-pro-site body.staff-nude .staff-login__back {
+  background: rgba(244, 252, 240, 0.85);
+}
+
+html.cs-pro-site body.staff-nude .staff-login__lock {
+  background: linear-gradient(145deg, rgba(189, 220, 161, 0.28), rgba(244, 252, 240, 0.92));
+  border-color: rgba(96, 140, 110, 0.28);
+}
+
+html.cs-pro-site body.staff-nude .cs-desk-side {
+  background: linear-gradient(180deg, rgba(244, 252, 240, 0.97) 0%, rgba(226, 243, 214, 0.9) 100%);
+  border-right-color: rgba(98, 120, 105, 0.1);
+}
+
+/* —— Bureau médecin : bascule du thème sombre (glass.css) vers nude clair —— */
+html.cs-pro-site body.staff-nude.doctor-cabinet.cs-page {
+  --cs-text: #263a30;
+  --cs-muted: #5a6d62;
+  --cs-muted2: #4d5e54;
+  color: var(--cs-text) !important;
+  background: linear-gradient(165deg, #d0ebbc 0%, #e2f3d6 38%, #ebf6e4 72%, #f4fcf0 100%) !important;
+}
+
+html.cs-pro-site body.staff-nude.doctor-cabinet .cs-bg {
+  background:
+    radial-gradient(ellipse 100% 65% at 50% -18%, rgba(189, 220, 161, 0.4), transparent 56%),
+    radial-gradient(ellipse 55% 48% at 100% 28%, rgba(208, 235, 188, 0.26), transparent 52%),
+    linear-gradient(165deg, #dce9c8 0%, #d0ebbc 46%, #e8f2dc 100%);
+  opacity: 1;
+}
+
+/* Médecin seul (pas secrétaire) : medbackground + voile pastel (même principe que landing / secrétaire) */
+html.cs-pro-site body.staff-nude.doctor-cabinet:not(.secretary-cabinet).cs-page {
+  background: transparent !important;
+}
+
+html.cs-pro-site body.staff-nude.doctor-cabinet:not(.secretary-cabinet) .cs-bg {
+  background-color: transparent;
+  background-image:
+    linear-gradient(
+      185deg,
+      rgba(244, 252, 240, 0.78) 0%,
+      rgba(226, 243, 214, 0.58) 32%,
+      rgba(235, 248, 190, 0.42) 58%,
+      rgba(208, 235, 188, 0.52) 100%
+    ),
+    url("../medbackground.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 1;
+}
+
+html.cs-pro-site body.staff-nude.doctor-cabinet:not(.secretary-cabinet) .cs-orb {
+  opacity: 0.06;
+  filter: blur(52px);
+}
+
+html.cs-pro-site body.staff-nude.doctor-cabinet:not(.secretary-cabinet) .cs-grid {
+  opacity: 0.12;
+}
+
+/* Secrétaire : photo de fond + voile pastel (même principe que body.landing-page::before + hospital.png) */
+html.cs-pro-site body.staff-nude.secretary-cabinet.doctor-cabinet.cs-page {
+  background: transparent !important;
+}
+
+html.cs-pro-site body.staff-nude.secretary-cabinet.doctor-cabinet .cs-bg {
+  background-color: transparent;
+  background-image:
+    linear-gradient(
+      185deg,
+      rgba(244, 252, 240, 0.78) 0%,
+      rgba(226, 243, 214, 0.58) 32%,
+      rgba(235, 248, 190, 0.42) 58%,
+      rgba(208, 235, 188, 0.52) 100%
+    ),
+    url("../secretairebackground.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 1;
+}
+
+html.cs-pro-site body.staff-nude.secretary-cabinet.doctor-cabinet .cs-orb {
+  opacity: 0.06;
+  filter: blur(52px);
+}
+
+html.cs-pro-site body.staff-nude.secretary-cabinet.doctor-cabinet .cs-grid {
+  opacity: 0.12;
+}
+
+html.cs-pro-site body.staff-nude.doctor-cabinet .cs-orb {
+  opacity: 0.2;
+  filter: blur(52px);
+}
+
+html.cs-pro-site body.staff-nude.doctor-cabinet .desk-hero {
+  background: linear-gradient(145deg, rgba(244, 252, 240, 0.95) 0%, rgba(226, 243, 214, 0.88) 50%, rgba(208, 235, 188, 0.55) 100%);
+  border-color: rgba(98, 120, 105, 0.16);
+  box-shadow: var(--cs-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+html.cs-pro-site body.staff-nude.doctor-cabinet .desk-hero::before {
+  background: radial-gradient(ellipse 90% 60% at 0% 0%, rgba(189, 220, 161, 0.22), transparent 50%);
+  opacity: 0.9;
+}
+
+html.cs-pro-site body.staff-nude.doctor-cabinet .desk-hero .cs-hero-title {
+  background: none;
+  -webkit-background-clip: unset;
+  background-clip: unset;
+  color: var(--cs-text) !important;
+  -webkit-text-fill-color: currentColor;
+  filter: none;
+}
+
+html.cs-pro-site body.staff-nude.doctor-cabinet .desk-hero .cs-lead {
+  color: var(--cs-muted);
+}
+
+html.cs-pro-site body.staff-nude.doctor-cabinet .cs-hero-title {
+  color: var(--cs-text);
+}
+
+html.cs-pro-site body.staff-nude.doctor-cabinet .cs-lead,
+html.cs-pro-site body.staff-nude.doctor-cabinet h2.cs-section,
+html.cs-pro-site body.staff-nude.doctor-cabinet h2 {
+  color: var(--cs-text);
+}
+
+html.cs-pro-site body.staff-nude.doctor-cabinet .cs-glass {
+  background: linear-gradient(165deg, rgba(244, 252, 240, 0.94) 0%, rgba(226, 243, 214, 0.9) 100%);
+  border-color: rgba(98, 120, 105, 0.14);
+  box-shadow: var(--cs-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(18px) saturate(115%);
+  -webkit-backdrop-filter: blur(18px) saturate(115%);
+}
+
+html.cs-pro-site body.staff-nude.doctor-cabinet .cs-glass--lift {
+  box-shadow: var(--cs-shadow), 0 0 0 1px rgba(189, 220, 161, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+html.cs-pro-site body.staff-nude.doctor-cabinet .cs-nav a:not(.is-active) {
+  color: var(--cs-text);
+  background: rgba(244, 252, 240, 0.82);
+  border-color: rgba(98, 120, 105, 0.14);
+}
+
+html.cs-pro-site body.staff-nude.doctor-cabinet .cs-nav a:hover:not(.is-active) {
+  color: var(--mint-1, #84a471);
+  border-color: rgba(96, 140, 110, 0.35);
+  background: rgba(208, 235, 188, 0.75);
+}
+
+html.cs-pro-site body.staff-nude.doctor-cabinet .cs-nav a.is-active {
+  color: var(--cs-text);
+  background: linear-gradient(135deg, rgba(189, 220, 161, 0.45), rgba(208, 235, 188, 0.35));
+  border-color: rgba(96, 140, 110, 0.3);
+}
+
+html.cs-pro-site body.staff-nude.doctor-cabinet .cs-badge {
+  color: var(--cs-text);
+  background: rgba(189, 220, 161, 0.35);
+  border-color: rgba(96, 140, 110, 0.22);
+}
+
+html.cs-pro-site body.staff-nude.doctor-cabinet .cs-messages li {
+  background: rgba(244, 252, 240, 0.95);
+  color: var(--cs-text);
+  border-color: rgba(96, 140, 110, 0.2);
+}
+
+html.cs-pro-site body.staff-nude.doctor-cabinet .desk-stat {
+  background: linear-gradient(160deg, rgba(244, 252, 240, 0.92) 0%, rgba(226, 243, 214, 0.88) 100%);
+  border-color: rgba(98, 120, 105, 0.18);
+  box-shadow: var(--cs-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+
+html.cs-pro-site body.staff-nude.doctor-cabinet .desk-stat::before {
+  background: linear-gradient(90deg, transparent, #8fbc8f, #b0d4a5, transparent);
+  opacity: 0.7;
+}
+
+html.cs-pro-site body.staff-nude.doctor-cabinet .desk-stat__val {
+  color: #3d6b4f;
+  text-shadow: none;
+}
+
+html.cs-pro-site body.staff-nude.doctor-cabinet .desk-stat__label {
+  color: var(--cs-muted);
+}
+
+html.cs-pro-site body.staff-nude.doctor-cabinet a.desk-rdvlist__name {
+  color: var(--cs-text);
+}
+
+html.cs-pro-site body.staff-nude.doctor-cabinet a.desk-rdvlist__time {
+  color: var(--mint-1, #84a471);
+}
+
+html.cs-pro-site body.staff-nude.doctor-cabinet a.desk-rdvlist__more {
+  color: #3d6b4f;
+}
+
+html.cs-pro-site body.staff-nude.doctor-cabinet .desk-risk-head__title {
+  color: var(--cs-text);
+}
+
+html.cs-pro-site body.staff-nude.doctor-cabinet .desk-risk-head__sub {
+  color: var(--cs-muted);
+}
+
+html.cs-pro-site body.staff-nude.doctor-cabinet .desk-curve-cap {
+  color: var(--cs-muted);
+}
+
+html.cs-pro-site body.staff-nude.doctor-cabinet .desk-curve-cap__key {
+  color: #3d6b4f;
+}
+
+html.cs-pro-site body.staff-nude.doctor-cabinet .desk-curve-cap__scale {
+  color: var(--cs-muted);
+}
+
+html.cs-pro-site body.staff-nude.doctor-cabinet .desk-curve-cap__scale strong {
+  color: var(--cs-text);
+}
+
+html.cs-pro-site body.staff-nude.doctor-cabinet .desk-risk-snap {
+  background: linear-gradient(155deg, rgba(255, 255, 255, 0.95) 0%, rgba(226, 243, 214, 0.9) 100%);
+  border-color: rgba(98, 120, 105, 0.2);
+  box-shadow: 0 2px 14px rgba(38, 58, 48, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+html.cs-pro-site body.staff-nude.doctor-cabinet .desk-risk-snap:hover {
+  box-shadow: 0 6px 22px rgba(38, 58, 48, 0.12);
+}
+
+html.cs-pro-site body.staff-nude.doctor-cabinet .desk-risk-snap__who {
+  color: var(--cs-text);
+}
+
+html.cs-pro-site body.staff-nude.doctor-cabinet .desk-risk-snap__date {
+  color: #4a6b56;
+  opacity: 1;
+}
+
+html.cs-pro-site body.staff-nude.doctor-cabinet .desk-risk-snap__value {
+  color: #142a1f;
+  text-shadow: none;
+}
+
+html.cs-pro-site body.staff-nude.doctor-cabinet .desk-risk-snap__unit {
+  opacity: 0.85;
+}
+
+html.cs-pro-site body.staff-nude.doctor-cabinet .desk-risk-snap__badge {
+  color: #1a2e24;
+  background: rgba(255, 255, 255, 0.95);
+  border-color: rgba(38, 58, 48, 0.15);
+}
+
+html.cs-pro-site body.staff-nude.doctor-cabinet .desk-risk-snap--low .desk-risk-snap__badge {
+  color: #14532d;
+  background: rgba(220, 252, 231, 0.98);
+  border-color: rgba(22, 163, 74, 0.45);
+}
+
+html.cs-pro-site body.staff-nude.doctor-cabinet .desk-risk-snap--mid .desk-risk-snap__badge {
+  color: #7c2d12;
+  background: rgba(254, 243, 199, 0.98);
+  border-color: rgba(217, 119, 6, 0.45);
+}
+
+html.cs-pro-site body.staff-nude.doctor-cabinet .desk-risk-snap--high .desk-risk-snap__badge {
+  color: #7f1d1d;
+  background: rgba(254, 202, 202, 0.98);
+  border-color: rgba(185, 28, 28, 0.4);
+}
+
+html.cs-pro-site body.staff-nude.doctor-cabinet a.desk-risk-foot {
+  color: #2d6b4a;
+}
+
+html.cs-pro-site body.staff-nude.doctor-cabinet a.desk-risk-foot:hover {
+  color: #1a4030;
+}
+
+html.cs-pro-site body.staff-nude.doctor-cabinet .desk-curve {
+  border-color: rgba(98, 120, 105, 0.16);
+  background: linear-gradient(180deg, rgba(244, 252, 240, 0.85) 0%, rgba(226, 243, 214, 0.55) 100%);
+}
+
+html.cs-pro-site body.staff-nude.doctor-cabinet .desk-curve__ylab,
+html.cs-pro-site body.staff-nude.doctor-cabinet .desk-curve__xlab {
+  fill: #4a6b56;
+}
+
+html.cs-pro-site body.staff-nude.doctor-cabinet .desk-curve__xlab {
+  fill: #2f5a40;
+  font-weight: 700;
+}
+
+html.cs-pro-site body.staff-nude.doctor-cabinet .desk-curve__axis-title {
+  fill: #5a6d62;
+}
+
+html.cs-pro-site body.staff-nude.doctor-cabinet .desk-curve__grid {
+  stroke: rgba(98, 120, 105, 0.18);
+}
+
+html.cs-pro-site body.staff-nude.doctor-cabinet .desk-curve__dot {
+  fill: #166534;
+  stroke: rgba(13, 148, 136, 0.95);
+  filter: drop-shadow(0 1px 2px rgba(38, 58, 48, 0.2));
+}
+
+html.cs-pro-site body.staff-nude.doctor-cabinet .cs-label {
+  color: var(--cs-muted);
+  opacity: 1;
+}
+
+html.cs-pro-site body.staff-nude.doctor-cabinet .cs-input,
+html.cs-pro-site body.staff-nude.doctor-cabinet .cs-select,
+html.cs-pro-site body.staff-nude.doctor-cabinet .cs-textarea {
+  background: #f4fcf0 !important;
+  border-color: rgba(96, 140, 110, 0.22) !important;
+  color: var(--cs-text) !important;
+}
+
+html.cs-pro-site body.staff-nude.doctor-cabinet .cs-django-form input,
+html.cs-pro-site body.staff-nude.doctor-cabinet .cs-django-form select,
+html.cs-pro-site body.staff-nude.doctor-cabinet .cs-django-form textarea {
+  background: #f4fcf0 !important;
+  color: var(--cs-text) !important;
+}
+
+html.cs-pro-site body.staff-nude.doctor-cabinet .cs-table-wrap {
+  background: rgba(244, 252, 240, 0.55);
+}
+
+html.cs-pro-site body.staff-nude.doctor-cabinet .cs-table th {
+  background: rgba(189, 220, 161, 0.38);
+  color: var(--cs-muted2);
+}
+
+html.cs-pro-site body.staff-nude.doctor-cabinet .cs-muted,
+html.cs-pro-site body.staff-nude.doctor-cabinet p.cs-muted {
+  color: var(--cs-muted);
+}
+
+/* Documents médicaux — onglets alignés sur le thème clair (staff-nude) */
+html.cs-pro-site body.staff-nude.doctor-cabinet .doctor-docs-hub .doctor-docs-sidebar__label {
+  color: var(--cs-muted);
+  opacity: 1;
+}
+html.cs-pro-site body.staff-nude.doctor-cabinet .doctor-docs-hub button.doctor-docs-tab {
+  background: linear-gradient(165deg, rgba(252, 255, 250, 0.98), rgba(226, 243, 214, 0.92));
+  border-color: rgba(98, 120, 105, 0.18);
+  color: var(--cs-text);
+  box-shadow: 0 2px 12px rgba(98, 120, 105, 0.07), inset 0 1px 0 rgba(255, 255, 255, 0.65);
+}
+html.cs-pro-site body.staff-nude.doctor-cabinet .doctor-docs-hub button.doctor-docs-tab:hover {
+  border-color: rgba(96, 140, 110, 0.38);
+  background: rgba(208, 235, 188, 0.9);
+  color: var(--cs-text);
+}
+html.cs-pro-site body.staff-nude.doctor-cabinet .doctor-docs-hub button.doctor-docs-tab.is-active {
+  background: linear-gradient(135deg, rgba(189, 220, 161, 0.52), rgba(208, 235, 188, 0.4));
+  border-color: rgba(96, 140, 110, 0.38);
+  color: #1e3d2c;
+  box-shadow: 0 4px 18px rgba(96, 140, 110, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.55);
+}
+html.cs-pro-site body.staff-nude.doctor-cabinet .doctor-docs-hub button.doctor-docs-tab:focus-visible {
+  outline-color: rgba(96, 140, 110, 0.65);
+}
+html.cs-pro-site body.staff-nude.doctor-cabinet .doctor-docs-hub .doctor-docs-tab__ic {
+  background: linear-gradient(145deg, rgba(189, 220, 161, 0.95), rgba(149, 188, 132, 0.72));
+  color: #1e3d2c;
+}
+html.cs-pro-site body.staff-nude.doctor-cabinet .doctor-docs-hub .doctor-docs-tab.is-active .doctor-docs-tab__ic {
+  background: linear-gradient(145deg, #e8f5dc, rgba(189, 220, 161, 0.92));
+  color: #143d28;
+}
+html.cs-pro-site body.staff-nude.doctor-cabinet .doctor-docs-hub .doctor-docs-tab__hint {
+  color: var(--cs-muted);
+  opacity: 1;
+}
+html.cs-pro-site body.staff-nude.doctor-cabinet .doctor-docs-hub button.doctor-docs-tab,
+html.cs-pro-site body.staff-nude.doctor-cabinet .doctor-docs-hub .doctor-docs-tab__ic,
+html.cs-pro-site body.staff-nude.doctor-cabinet .doctor-docs-hub .cs-input,
+html.cs-pro-site body.staff-nude.doctor-cabinet .doctor-docs-hub .cs-select,
+html.cs-pro-site body.staff-nude.doctor-cabinet .doctor-docs-hub .cs-textarea,
+html.cs-pro-site body.staff-nude.doctor-cabinet .doctor-docs-hub .cs-glass,
+html.cs-pro-site body.staff-nude.doctor-cabinet .doctor-docs-hub .doctor-ordo-page__card,
+html.cs-pro-site body.staff-nude.doctor-cabinet .doctor-docs-hub .doctor-cert-apercu,
+html.cs-pro-site body.staff-nude.doctor-cabinet .doctor-docs-hub .doc-check-grid--dense {
+  border-radius: 0 !important;
+}
+html.cs-pro-site body.staff-nude.doctor-cabinet .doctor-docs-hub .doc-check-grid--dense {
+  background: rgba(244, 252, 240, 0.72);
+  border-color: rgba(98, 120, 105, 0.14);
+}
+html.cs-pro-site body.staff-nude.doctor-cabinet .cs-topbar {
+  margin-bottom: 1.5rem;
+}
+
+/* Colonne latérale médecin + liens : tons nude explicites */
+html.cs-pro-site body.staff-nude .cs-desk-nav__item:hover {
+  background: rgba(208, 235, 188, 0.5);
+  border-color: rgba(96, 140, 110, 0.2);
+}
+
+html.cs-pro-site body.staff-nude .cs-desk-nav__item.is-active {
+  background: linear-gradient(120deg, rgba(189, 220, 161, 0.4), rgba(208, 235, 188, 0.3));
+  border-color: rgba(96, 140, 110, 0.24);
+}
+
+html.cs-pro-site body.staff-nude .cs-desk-nav__item--logout:hover {
+  background: rgba(248, 180, 180, 0.2);
+  color: #8b4a4a;
+  border-color: rgba(200, 100, 100, 0.22);
+}
+
+/* —— Bureau secrétaire : barre jour agenda + annonces —— */
+html.cs-pro-site body.staff-nude.secretary-cabinet .sec-desk-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.75rem 1rem;
+  margin-bottom: 1.35rem;
+  padding: 0.85rem 1rem;
+  background: linear-gradient(165deg, rgba(244, 252, 240, 0.92), rgba(226, 243, 214, 0.82));
+  border: 1px solid rgba(98, 120, 105, 0.14);
+  box-shadow: var(--cs-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+
+html.cs-pro-site body.staff-nude.secretary-cabinet .sec-desk-toolbar__form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.85rem;
+}
+
+html.cs-pro-site body.staff-nude.secretary-cabinet .sec-desk-toolbar__lab {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--cs-muted);
+}
+
+html.cs-pro-site body.staff-nude.secretary-cabinet .sec-desk-toolbar__btn {
+  padding: 0.45rem 1rem;
+}
+
+html.cs-pro-site body.staff-nude.secretary-cabinet .sec-anno-item {
+  font-size: 0.92rem;
+  line-height: 1.52;
+  color: var(--cs-text);
+  margin-bottom: 0.35rem;
+}
+
+/* Formulaires simples (absence médecin, etc.) : colonne centrée dans la zone principale */
+html.cs-pro-site body.staff-nude.secretary-cabinet .sec-page-centre,
+html.cs-pro-site body.staff-nude.doctor-cabinet .sec-page-centre {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+html.cs-pro-site body.staff-nude.secretary-cabinet .sec-page-centre > *,
+html.cs-pro-site body.staff-nude.doctor-cabinet .sec-page-centre > * {
+  width: 100%;
+  max-width: 28rem;
+}
+
+/* Fiche patient secrétariat : colonne un peu plus large + angles droits */
+html.cs-pro-site body.staff-nude.secretary-cabinet .sec-page-centre.sec-page-centre--patient-form > * {
+  max-width: 34rem;
+}
+
+html.cs-pro-site body.staff-nude.secretary-cabinet .sec-page-centre--patient-form .cs-glass,
+html.cs-pro-site body.staff-nude.secretary-cabinet .sec-page-centre--patient-form .cs-django-form input,
+html.cs-pro-site body.staff-nude.secretary-cabinet .sec-page-centre--patient-form .cs-django-form select,
+html.cs-pro-site body.staff-nude.secretary-cabinet .sec-page-centre--patient-form .cs-django-form textarea,
+html.cs-pro-site body.staff-nude.secretary-cabinet .sec-page-centre--patient-form .cs-input,
+html.cs-pro-site body.staff-nude.secretary-cabinet .sec-page-centre--patient-form .cs-select,
+html.cs-pro-site body.staff-nude.secretary-cabinet .sec-page-centre--patient-form .cs-textarea,
+html.cs-pro-site body.staff-nude.secretary-cabinet .sec-page-centre--patient-form .cs-form-actions .cs-btn {
+  border-radius: 0;
+}

@@ -1,0 +1,64 @@
+{% extends "accounts/base_doctor.html" %}
+{% block title %}Agenda — CardioSoin{% endblock %}
+{% block nav_agenda %}is-active{% endblock %}
+{% block shell_class %}{{ block.super }} cs-main--fluid{% endblock %}
+{% block content %}
+<div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:0.75rem;margin-bottom:0.5rem;max-width:var(--lp-content-max, 1020px);">
+    <h1 class="cs-hero-title" style="font-size:clamp(1.25rem,2.5vw,1.5rem);margin:0;">{{ mois_label }}</h1>
+    <div class="cs-desk-mois-nav" style="display:flex;gap:0.5rem;align-items:center;">
+        <a href="?jour={{ prev_mois|date:'Y-m-d' }}" class="cs-btn" style="padding:0.4rem 0.75rem;font-size:0.85rem;">‹ Mois précédent</a>
+        <a href="?jour={{ next_mois|date:'Y-m-d' }}" class="cs-btn" style="padding:0.4rem 0.75rem;font-size:0.85rem;">Mois suivant ›</a>
+    </div>
+</div>
+<p class="cs-lead">Vos consultations — vue mensuelle (une case par jour).</p>
+<div class="cs-glass cs-glass--pad" style="padding:0;overflow-x:auto;">
+    <div class="cs-table-wrap" style="min-width:min(100%, 900px);">
+        <table class="cs-table cs-table--month">
+            <thead>
+                <tr>
+                    <th scope="col" style="min-width:7rem;">Lun</th>
+                    <th scope="col" style="min-width:7rem;">Mar</th>
+                    <th scope="col" style="min-width:7rem;">Mer</th>
+                    <th scope="col" style="min-width:7rem;">Jeu</th>
+                    <th scope="col" style="min-width:7rem;">Ven</th>
+                    <th scope="col" style="min-width:7rem;">Sam</th>
+                    <th scope="col" style="min-width:7rem;">Dim</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for week in agenda_mois %}
+                <tr>
+                    {% for cell in week %}
+                    <td class="cs-cal-cell{% if not cell.in_month %} cs-cal-cell--muted{% endif %}" style="vertical-align:top;min-height:5rem;border-right:1px solid rgba(255,255,255,0.06);">
+                        <div class="cs-cal-cell__num" style="font-weight:700;font-size:0.9rem;margin-bottom:0.35rem;{% if not cell.in_month %}opacity:0.45;{% endif %}">{{ cell.date|date:"j" }}</div>
+                        <ul class="cs-list-plain" style="font-size:0.78rem;min-height:0;list-style:none;padding:0;margin:0;">
+                            {% for r in cell.rdvs %}
+                            <li style="margin-bottom:0.5rem;padding-bottom:0.4rem;border-bottom:1px solid rgba(255,255,255,0.05);">
+                                <strong>{{ r.date_heure|date:"H:i" }}</strong>
+                                <br><span class="cs-cal-cell__name">{{ r.demandeur_nom_affiche|truncatechars:22 }}</span>
+                                <br><span class="cs-muted">{{ r.get_statut_display }}</span>
+                                {% if r.statut != "terminé" and r.statut != "annulé" %}
+                                <div style="margin-top:0.3rem;">
+                                    <form class="cs-inline-form" method="post" action="{% url 'doctor_rdv_terminer' r.id %}" style="display:inline;">{% csrf_token %}
+                                    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                                    <button type="submit" class="cs-btn" style="padding:0.2rem 0.45rem;font-size:0.7rem;">Terminé</button>
+                                    </form>
+                                    {% if r.patient_id %}<a href="{% url 'doctor_dossier' r.patient_id %}" style="font-size:0.68rem;margin-left:0.25rem;">Dossier</a>{% endif %}
+                                </div>
+                                {% endif %}
+                            </li>
+                            {% empty %}
+                            {% if cell.in_month %}
+                            <li class="cs-muted" style="font-size:0.75rem;">—</li>
+                            {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

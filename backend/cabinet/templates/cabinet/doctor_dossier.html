@@ -1,0 +1,87 @@
+{% extends "accounts/base_doctor.html" %}
+{% block title %}Dossier — {{ patient.user.get_full_name|default:patient.user.username }}{% endblock %}
+{% block nav_dossiers %}is-active{% endblock %}
+{% block content %}
+<h1 class="cs-hero-title">{{ patient.user.get_full_name|default:patient.user.username }}</h1>
+<p class="cs-lead">Dossier médical — antécédents, allergies, notes (enregistrement immédiat possible).</p>
+
+<form method="post" class="cs-glass cs-glass--pad cs-glass--lift" id="dossier-form" data-autosave-url="{% url 'doctor_dossier_autosave' patient_id=patient.id %}" action="">
+    {% csrf_token %}
+    <p class="cs-muted" id="dossier-save-hint" style="font-size:0.85rem;margin:0 0 1rem;min-height:1.2rem;" aria-live="polite">Les modifications peuvent être enregistrées automatiquement (quelques secondes après la dernière frappe) ou manuellement.</p>
+    <label class="cs-label" for="antecedents">Antécédents</label>
+    <textarea class="cs-textarea" name="antecedents" id="antecedents" data-field="antecedents" rows="5">{{ doss.antecedents }}</textarea>
+    <label class="cs-label" for="allergies">Allergies</label>
+    <textarea class="cs-textarea" name="allergies" id="allergies" data-field="allergies" rows="3">{{ doss.allergies }}</textarea>
+    <label class="cs-label" for="notes_generales">Notes générales</label>
+    <textarea class="cs-textarea" name="notes_generales" id="notes_generales" data-field="notes_generales" rows="4">{{ doss.notes_generales }}</textarea>
+    <div class="cs-form-actions" style="margin-top:0.5rem;">
+        <button type="button" class="cs-btn" id="dossier-save-now">Enregistrer maintenant (synchro)</button>
+        <button type="submit" class="cs-btn cs-btn--ghost" style="margin-top:0.5rem;">Enregistrer par envoi du formulaire</button>
+    </div>
+</form>
+
+<div class="cs-glass cs-glass--pad cs-glass--lift" style="margin-top:1rem;">
+    <h2 class="cs-section">Historique des rendez-vous</h2>
+    <ul class="cs-list-plain">
+        {% for r in rdvs %}
+        <li>{{ r.date_heure|date:"d/m/Y H:i" }} — Dr {{ r.medecin.user.get_full_name|default:r.medecin.user.username }} — {{ r.get_statut_display }}</li>
+        {% empty %}
+        <li class="cs-muted">Aucun rendez-vous enregistré</li>
+        {% endfor %}
+    </ul>
+</div>
+
+<script>
+(function() {
+  const elForm = document.getElementById("dossier-form");
+  const url = elForm && elForm.dataset ? elForm.dataset.autosaveUrl : "";
+  if (!url) return;
+  const hint = document.getElementById("dossier-save-hint");
+  const getCsrf = function() {
+    const m = document.querySelector("#dossier-form [name=csrfmiddlewaretoken]");
+    return m ? m.value : "";
+  };
+  const fields = ["antecedents", "allergies", "notes_generales"];
+  let t = null;
+  function doSave() {
+    const body = {};
+    fields.forEach(function(f) {
+      const el = document.getElementById(f);
+      if (el) body[f] = el.value;
+    });
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": getCsrf(),
+        "X-Requested-With": "XMLHttpRequest"
+      },
+      body: JSON.stringify(body),
+      credentials: "same-origin"
+    }).then(function(r) { return r.json(); }).then(function(data) {
+      if (data.ok) {
+        const d = data.saved_at ? new Date(data.saved_at) : new Date();
+        hint.textContent = "Enregistré à " + d.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+      } else {
+        hint.textContent = (data && data.error) || "Erreur d’enregistrement.";
+      }
+    }).catch(function() {
+      hint.textContent = "Erreur réseau — réessayez ou utilisez l’enregistrement manuel.";
+    });
+  }
+  function schedule() {
+    if (t) clearTimeout(t);
+    hint.textContent = "En attente d’enregistrement…";
+    t = setTimeout(doSave, 1200);
+  }
+  fields.forEach(function(f) {
+    const el = document.getElementById(f);
+    if (el) el.addEventListener("input", schedule);
+  });
+  document.getElementById("dossier-save-now").addEventListener("click", function() {
+    if (t) clearTimeout(t);
+    doSave();
+  });
+})();
+</script>
+{% endblock %}

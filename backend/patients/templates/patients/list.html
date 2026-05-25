@@ -1,0 +1,22 @@
+{% extends "accounts/base_staff.html" %}
+
+{% block title %}Patients — CardioSoin{% endblock %}
+
+{% block shell_class %}cs-main--fluid{% endblock %}
+
+{% block topbar %}
+
+<header class="cs-topbar">
+    <a href="{% url 'secretary_desk' %}" class="cs-back">← Espace secrétaire</a>
+    <a href="{% url 'logout' %}" class="cs-back" style="margin-left:auto;">Déconnexion</a>
+
+</header>
+
+{% endblock %}
+
+{% block content %}
+
+{% include "patients/partials/patient_list_main.html" %}
+
+{% endblock %}
+

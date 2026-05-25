@@ -1,0 +1,49 @@
+{% extends "accounts/base_patient_shell.html" %}
+{% load static %}
+{% block title %}Mes rendez-vous — CardioSoin{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/patient-inner-pages.css' %}">{% endblock %}
+{% block patient_toolbar %}
+<div class="patient-page-head">
+  <div></div>
+  <div class="pdash__top-meta-actions">
+    {% include "accounts/partials/patient_theme_toggle.html" %}
+  </div>
+</div>
+{% endblock %}
+{% block content %}
+<section class="pdash-feed">
+  <div class="patient-page-head" style="margin-bottom:0.75rem;">
+    <div class="pdash-feed__head" style="margin:0;">
+      <h2 class="pdash-feed__title" style="margin:0;">Historique des rendez-vous</h2>
+      <p class="pdash-feed__sub">Passés et à venir, avec statut en temps réel.</p>
+    </div>
+  </div>
+
+  <div class="patient-page-actions">
+    <a class="pdash-feed__cta" href="{% url 'patient_rendez_vous_nouveau' %}">+ Prendre un rendez-vous</a>
+  </div>
+
+  <div class="patient-table-wrap">
+    <table class="patient-table">
+      <thead><tr><th>Date</th><th>Médecin</th><th>Statut</th><th>Actions</th></tr></thead>
+      <tbody>
+        {% for r in rdvs %}
+        <tr>
+          <td>{{ r.date_heure|date:"d/m/Y H:i" }}</td>
+          <td>Dr {{ r.medecin.user.get_full_name|default:r.medecin.user.username }}</td>
+          <td>{{ r.get_statut_display }}</td>
+          <td>
+            <a href="{% url 'patient_rendez_vous_detail' r.id %}">Détails</a>
+            {% if r.statut == "en_attente" or r.statut == "confirmé" %}
+            &nbsp;·&nbsp;<a href="{% url 'patient_rendez_vous_annuler' r.id %}">Annuler</a>
+            {% endif %}
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4" style="opacity:0.75;">Aucun rendez-vous</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

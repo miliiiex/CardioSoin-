@@ -1,0 +1,779 @@
+/**
+ * Page « Prendre un rendez-vous » — fond ECG + formulaire centré
+ */
+@import url("https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap");
+
+body.rdv-booking-page {
+  font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+}
+
+body.rdv-booking-page .cs-shell {
+  max-width: none;
+  padding-left: clamp(1rem, 4vw, 2rem);
+  padding-right: clamp(1rem, 4vw, 2rem);
+}
+
+body.rdv-booking-page main {
+  position: relative;
+  padding: clamp(0.75rem, 2vw, 1.5rem) 0 clamp(1.5rem, 4vw, 2.5rem);
+}
+
+/* —— Panneau central : reflet foncé semi-transparent (ECG visible au travers) —— */
+.rdv-content-panel {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 52rem);
+  margin: 0 auto;
+  padding: clamp(1.15rem, 3vw, 2rem) clamp(1.25rem, 3.5vw, 2.25rem) clamp(1.35rem, 3.5vw, 2.35rem);
+  border-radius: 0;
+  border: 1px solid rgba(94, 234, 212, 0.16);
+  background: linear-gradient(
+    160deg,
+    rgba(15, 23, 42, 0.72) 0%,
+    rgba(15, 77, 69, 0.52) 42%,
+    rgba(6, 36, 32, 0.66) 100%
+  );
+  -webkit-backdrop-filter: blur(20px) saturate(155%);
+  backdrop-filter: blur(20px) saturate(155%);
+  box-shadow:
+    0 28px 60px rgba(5, 31, 32, 0.42),
+    inset 0 1px 0 rgba(218, 241, 222, 0.08),
+    inset 0 0 0 1px rgba(0, 0, 0, 0.2);
+}
+
+/* Vignette / reflet sur les bords du cadre (sans assombrir le texte) */
+.rdv-content-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 95% 55% at 50% -15%, rgba(45, 212, 191, 0.1), transparent 52%),
+    radial-gradient(ellipse 100% 70% at 50% 115%, rgba(0, 0, 0, 0.35), transparent 48%),
+    radial-gradient(ellipse 55% 90% at 0% 50%, rgba(0, 0, 0, 0.22), transparent 62%),
+    radial-gradient(ellipse 55% 90% at 100% 50%, rgba(0, 0, 0, 0.22), transparent 62%);
+  opacity: 0.85;
+}
+
+.rdv-content-panel > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* —— Barre du haut —— */
+.rdv-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  width: 100%;
+  margin: 0 0 1.15rem;
+}
+
+.rdv-topbar a {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  border-radius: 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-decoration: none;
+  color: #ccfbf1;
+  border: 1px solid rgba(94, 234, 212, 0.35);
+  background: rgba(15, 23, 42, 0.45);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+
+.rdv-topbar a:hover {
+  background: rgba(45, 212, 191, 0.14);
+  border-color: rgba(94, 234, 212, 0.5);
+  color: #f0fdfa;
+}
+
+/* —— Couche ECG : tout l’écran, ondes +45 % (scale 1.45 sur le tracé) —— */
+.rdv-ecg-wrap {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.rdv-ecg-wrap::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 120% 70% at 50% 40%, rgba(13, 148, 136, 0.09), transparent 60%),
+    radial-gradient(ellipse 80% 50% at 80% 20%, rgba(34, 211, 238, 0.05), transparent 50%);
+}
+
+/* Bandes empilées sur toute la hauteur */
+.rdv-ecg-field {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.rdv-ecg-stripe {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  opacity: 0.38;
+}
+
+.rdv-ecg-stripe:nth-child(even) {
+  opacity: 0.26;
+}
+
+.rdv-ecg-stripe:nth-child(3n) {
+  opacity: 0.32;
+}
+
+.rdv-ecg-stripe:nth-child(3n) .rdv-ecg-svg {
+  color: #5eead4;
+}
+
+/* Défilement horizontal : 2 × le même motif pour boucler sans trou sur toute la largeur */
+.rdv-ecg-track {
+  display: flex;
+  width: max-content;
+  min-width: 100%;
+  will-change: transform;
+  animation: rdv-ecg-drift 17s linear infinite;
+}
+
+.rdv-ecg-stripe:nth-child(even) .rdv-ecg-track {
+  animation-duration: 24s;
+  animation-direction: reverse;
+}
+
+.rdv-ecg-stripe:nth-child(3n) .rdv-ecg-track {
+  animation-duration: 20s;
+}
+
+.rdv-ecg-stripe:nth-child(5n) .rdv-ecg-track {
+  animation-duration: 29s;
+  animation-direction: reverse;
+}
+
+.rdv-ecg-track-inner {
+  display: flex;
+  flex-direction: row;
+  flex-shrink: 0;
+  width: max-content;
+  /* Hauteur ~ +45 % vs ancienne base pour garder l’échelle visuelle */
+  height: clamp(100px, 15.5vh, 247px);
+}
+
+.rdv-ecg-repeat {
+  display: flex;
+  flex-direction: row;
+  flex-shrink: 0;
+}
+
+@keyframes rdv-ecg-drift {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.rdv-ecg-svg {
+  flex-shrink: 0;
+  height: 100%;
+  width: auto;
+  color: #2dd4bf;
+}
+
+.rdv-ecg-path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.25;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 0 8px rgba(45, 212, 191, 0.5));
+  animation: rdv-ecg-pulse 2.2s ease-in-out infinite;
+}
+
+.rdv-ecg-stripe:nth-child(even) .rdv-ecg-path {
+  stroke-width: 2;
+  filter: drop-shadow(0 0 6px rgba(34, 211, 238, 0.35));
+  animation-duration: 2.8s;
+}
+
+@keyframes rdv-ecg-pulse {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.rdv-ecg-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(45, 212, 191, 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(45, 212, 191, 0.03) 1px, transparent 1px);
+  background-size: 100% 35px, 80px 100%;
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+/* —— Zone centrale —— */
+.rdv-booking {
+  position: relative;
+  z-index: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0.15rem 0 0.35rem;
+}
+
+.rdv-booking__intro {
+  text-align: center;
+  max-width: 32rem;
+  margin-bottom: 1.75rem;
+}
+
+.rdv-booking__title {
+  margin: 0 0 0.6rem;
+  font-family: "Syne", system-ui, sans-serif;
+  font-size: clamp(1.65rem, 4vw, 2.15rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #f8fafc;
+  line-height: 1.15;
+}
+
+.rdv-booking__title span {
+  background: linear-gradient(120deg, #ccfbf1, #5eead4, #14b8a6);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.rdv-booking__lead {
+  margin: 0;
+  font-size: 0.92rem;
+  color: #94a3b8;
+  line-height: 1.6;
+}
+
+.rdv-stack {
+  width: 100%;
+  max-width: 28rem;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin: 0 auto;
+}
+
+/* Cartes / alertes */
+.rdv-card {
+  border-radius: 0;
+  padding: 1.35rem 1.4rem 1.5rem;
+  background: linear-gradient(155deg, rgba(15, 23, 42, 0.68) 0%, rgba(15, 77, 69, 0.38) 100%);
+  -webkit-backdrop-filter: blur(12px) saturate(150%);
+  backdrop-filter: blur(12px) saturate(150%);
+  border: 1px solid rgba(94, 234, 212, 0.15);
+  box-shadow:
+    0 16px 40px rgba(5, 31, 32, 0.28),
+    inset 0 1px 0 rgba(218, 241, 222, 0.06);
+}
+
+.rdv-card--form {
+  border-color: rgba(94, 234, 212, 0.28);
+  box-shadow:
+    0 24px 50px rgba(5, 31, 32, 0.38),
+    0 0 0 1px rgba(45, 212, 191, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  min-width: 0;
+}
+
+.rdv-form__fields {
+  display: grid;
+  gap: 1rem;
+  width: 100%;
+  min-width: 0;
+}
+
+.rdv-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.rdv-field-row {
+  display: grid;
+  gap: 0.85rem;
+  min-width: 0;
+}
+
+.rdv-field-row--2col {
+  grid-template-columns: 1fr 1fr;
+}
+
+@media (max-width: 440px) {
+  .rdv-field-row--2col {
+    grid-template-columns: 1fr;
+  }
+}
+
+.rdv-card--error {
+  border-color: rgba(248, 113, 113, 0.4);
+  background: linear-gradient(155deg, rgba(69, 10, 10, 0.55) 0%, rgba(15, 23, 42, 0.85) 100%);
+}
+
+.rdv-card--error p {
+  margin: 0;
+  color: #fecaca;
+  font-size: 0.9rem;
+}
+
+.rdv-card--alt {
+  border-color: rgba(45, 212, 191, 0.25);
+}
+
+.rdv-card--warn {
+  border-color: rgba(251, 191, 36, 0.4);
+}
+
+.rdv-card--warn p {
+  margin: 0;
+  color: #fde68a;
+  font-size: 0.9rem;
+}
+
+.rdv-card h2 {
+  margin: 0 0 0.65rem;
+  font-family: "Syne", system-ui, sans-serif;
+  font-size: 1rem;
+  font-weight: 800;
+  color: #e2e8f0;
+}
+
+.rdv-card ul {
+  margin: 0;
+  padding-left: 1.15rem;
+  color: #94a3b8;
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
+
+/* Champs formulaire */
+.rdv-form {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.rdv-form *,
+.rdv-form *::before,
+.rdv-form *::after {
+  box-sizing: border-box;
+}
+
+.rdv-form label {
+  display: block;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #64748b;
+  margin: 0;
+}
+
+.rdv-form input,
+.rdv-form select,
+.rdv-form textarea {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  padding: 0.72rem 0.9rem;
+  border-radius: 0;
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  background: rgba(2, 6, 23, 0.55);
+  color: #f1f5f9;
+  font-size: 0.9rem;
+  font-family: inherit;
+  margin: 0;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.rdv-form input:focus,
+.rdv-form select:focus,
+.rdv-form textarea:focus {
+  outline: none;
+  border-color: rgba(45, 212, 191, 0.55);
+  box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.15);
+}
+
+.rdv-form select {
+  cursor: pointer;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-color: rgba(2, 6, 23, 0.55);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%235eead4' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.85rem center;
+  background-size: 12px 12px;
+  padding-right: 2.25rem;
+}
+
+.rdv-form textarea {
+  min-height: 5rem;
+  resize: vertical;
+}
+
+.rdv-form ::placeholder {
+  color: #64748b;
+}
+
+.rdv-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-top: 0.5rem;
+}
+
+.rdv-btn {
+  flex: 1;
+  min-width: 8rem;
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 0;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-family: inherit;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  line-height: 1.3;
+  transition: transform 0.2s, filter 0.2s, box-shadow 0.2s;
+}
+
+.rdv-btn--primary {
+  background: linear-gradient(135deg, #0d9488, #14b8a6);
+  color: #f0fdfa;
+  box-shadow: 0 6px 22px rgba(20, 184, 166, 0.35);
+}
+
+.rdv-btn--primary:hover {
+  filter: brightness(1.06);
+  transform: translateY(-1px);
+}
+
+.rdv-btn--ghost {
+  background: transparent;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  color: #cbd5e1;
+}
+
+.rdv-btn--ghost:hover {
+  border-color: rgba(45, 212, 191, 0.45);
+  color: #e2e8f0;
+}
+
+.rdv-warn-actions {
+  margin-top: 0.85rem;
+}
+
+@media (max-width: 520px) {
+  .rdv-content-panel {
+    border-radius: 0;
+    padding: 1rem 1.1rem 1.25rem;
+  }
+
+  .rdv-booking {
+    min-height: auto;
+    padding-top: 0.25rem;
+  }
+
+  .rdv-actions {
+    flex-direction: column;
+  }
+
+  .rdv-btn {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rdv-ecg-track {
+    animation: none;
+  }
+  .rdv-ecg-path {
+    animation: none;
+  }
+}
+
+/* —— Intégration shell patient (.pdash) · clair verdant · sombre forêt —— */
+.pdash.pdash--rdv.rdv-booking-page .pdash__main--rdv {
+  position: relative;
+  z-index: 2;
+  max-width: 1080px;
+}
+
+.pdash-rdv-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.85rem;
+}
+
+/* Traces ECG : harmonie palette */
+html[data-patient-theme="light"] .rdv-ecg-svg {
+  color: #84a471;
+}
+html[data-patient-theme="light"] .rdv-ecg-stripe:nth-child(3n) .rdv-ecg-svg {
+  color: #6b8558;
+}
+html[data-patient-theme="light"] .rdv-ecg-grid {
+  background-image:
+    linear-gradient(rgba(132, 164, 113, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(132, 164, 113, 0.045) 1px, transparent 1px);
+}
+
+html[data-patient-theme="dark"] .rdv-ecg-svg {
+  color: #8eb69b;
+}
+html[data-patient-theme="dark"] .rdv-ecg-stripe:nth-child(3n) .rdv-ecg-svg {
+  color: #daf1de;
+}
+html[data-patient-theme="dark"] .rdv-ecg-grid {
+  background-image:
+    linear-gradient(rgba(142, 182, 155, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(142, 182, 155, 0.035) 1px, transparent 1px);
+}
+
+html[data-patient-theme="light"] body.rdv-booking-page .rdv-content-panel {
+  border: 1px solid rgba(185, 209, 169, 0.72);
+  background: linear-gradient(
+    165deg,
+    rgba(255, 255, 255, 0.97) 0%,
+    rgba(244, 252, 242, 0.95) 42%,
+    rgba(225, 247, 214, 0.92) 70%,
+    rgba(207, 237, 193, 0.88) 100%
+  );
+  box-shadow:
+    0 24px 48px rgba(74, 99, 64, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    inset 0 0 0 1px rgba(207, 237, 193, 0.4);
+}
+
+html[data-patient-theme="light"] body.rdv-booking-page .rdv-booking__title {
+  color: #1e3419;
+}
+
+html[data-patient-theme="light"] body.rdv-booking-page .rdv-booking__title span {
+  background: linear-gradient(120deg, #b9d1a9 0%, #84a471 50%, #6b8558 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+html[data-patient-theme="light"] body.rdv-booking-page .rdv-booking__lead {
+  color: #5a7449;
+}
+
+html[data-patient-theme="light"] body.rdv-booking-page .rdv-topbar a {
+  color: #6b8558;
+  border-color: rgba(132, 164, 113, 0.45);
+  background: rgba(244, 252, 242, 0.92);
+}
+
+html[data-patient-theme="light"] body.rdv-booking-page .rdv-topbar a:hover {
+  background: rgba(207, 237, 193, 0.65);
+  border-color: rgba(107, 133, 88, 0.55);
+  color: #3d4f36;
+}
+
+html[data-patient-theme="light"] body.rdv-booking-page .rdv-card {
+  background: linear-gradient(155deg, rgba(255, 255, 255, 0.95) 0%, rgba(244, 252, 242, 0.9) 100%);
+  border-color: rgba(185, 209, 169, 0.55);
+}
+
+html[data-patient-theme="light"] body.rdv-booking-page .rdv-card--form {
+  border-color: rgba(132, 164, 113, 0.42);
+  box-shadow:
+    0 18px 40px rgba(74, 99, 64, 0.07),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+html[data-patient-theme="light"] body.rdv-booking-page .rdv-card h2 {
+  color: #1e3419;
+}
+
+html[data-patient-theme="light"] body.rdv-booking-page .rdv-card ul {
+  color: #5a7449;
+}
+
+html[data-patient-theme="light"] body.rdv-booking-page .rdv-form label {
+  color: #6b8558;
+}
+
+html[data-patient-theme="light"] body.rdv-booking-page .rdv-form input,
+html[data-patient-theme="light"] body.rdv-booking-page .rdv-form select,
+html[data-patient-theme="light"] body.rdv-booking-page .rdv-form textarea {
+  border-color: rgba(185, 209, 169, 0.95);
+  background: rgba(255, 255, 255, 0.95);
+  color: #1e3419;
+}
+
+html[data-patient-theme="light"] body.rdv-booking-page .rdv-form select {
+  background-color: rgba(255, 255, 255, 0.95);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2384a471' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.85rem center;
+  background-size: 12px 12px;
+}
+
+html[data-patient-theme="light"] body.rdv-booking-page .rdv-form input:focus,
+html[data-patient-theme="light"] body.rdv-booking-page .rdv-form select:focus,
+html[data-patient-theme="light"] body.rdv-booking-page .rdv-form textarea:focus {
+  border-color: rgba(132, 164, 113, 0.95);
+  box-shadow: 0 0 0 3px rgba(207, 237, 193, 0.65);
+}
+
+html[data-patient-theme="light"] body.rdv-booking-page .rdv-btn--primary {
+  background: linear-gradient(135deg, #6b8558, #84a471);
+  color: #f4fcf2;
+  box-shadow: 0 8px 24px rgba(107, 133, 88, 0.28);
+}
+
+html[data-patient-theme="light"] body.rdv-booking-page .rdv-btn--ghost {
+  border-color: rgba(132, 164, 113, 0.5);
+  color: #5a7449;
+}
+
+html[data-patient-theme="light"] body.rdv-booking-page .rdv-btn--ghost:hover {
+  border-color: rgba(107, 133, 88, 0.65);
+  color: #1e3419;
+}
+
+/* Thème sombre RDV — aligné #163B32 + accents pistache */
+html[data-patient-theme="dark"] body.rdv-booking-page .rdv-content-panel {
+  border: 1px solid rgba(142, 182, 155, 0.28);
+  background: linear-gradient(
+    160deg,
+    rgba(22, 59, 50, 0.52) 0%,
+    rgba(11, 43, 38, 0.72) 48%,
+    rgba(5, 31, 32, 0.62) 100%
+  );
+  box-shadow:
+    0 28px 56px rgba(5, 31, 32, 0.45),
+    inset 0 1px 0 rgba(218, 241, 222, 0.06);
+}
+
+html[data-patient-theme="dark"] body.rdv-booking-page .rdv-booking__title {
+  color: #daf1de;
+}
+
+html[data-patient-theme="dark"] body.rdv-booking-page .rdv-booking__title span {
+  background: linear-gradient(120deg, #e1f7d6 0%, #8eb69b 55%, #daf1de 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+html[data-patient-theme="dark"] body.rdv-booking-page .rdv-booking__lead {
+  color: #8eb69b;
+}
+
+html[data-patient-theme="dark"] body.rdv-booking-page .rdv-topbar a {
+  color: #e1f7d6;
+  border-color: rgba(142, 182, 155, 0.45);
+  background: rgba(22, 59, 50, 0.55);
+}
+
+html[data-patient-theme="dark"] body.rdv-booking-page .rdv-topbar a:hover {
+  background: rgba(35, 83, 71, 0.55);
+  border-color: rgba(225, 247, 214, 0.35);
+  color: #f4fcf2;
+}
+
+html[data-patient-theme="dark"] body.rdv-booking-page .rdv-card {
+  background: linear-gradient(155deg, rgba(22, 59, 50, 0.58) 0%, rgba(11, 43, 38, 0.72) 100%);
+  border-color: rgba(142, 182, 155, 0.22);
+}
+
+html[data-patient-theme="dark"] body.rdv-booking-page .rdv-card--form {
+  border-color: rgba(225, 247, 214, 0.22);
+  box-shadow:
+    0 22px 48px rgba(5, 31, 32, 0.35),
+    inset 0 1px 0 rgba(218, 241, 222, 0.05);
+}
+
+html[data-patient-theme="dark"] body.rdv-booking-page .rdv-card h2 {
+  color: #daf1de;
+}
+
+html[data-patient-theme="dark"] body.rdv-booking-page .rdv-card ul {
+  color: #8eb69b;
+}
+
+html[data-patient-theme="dark"] body.rdv-booking-page .rdv-form label {
+  color: #8eb69b;
+}
+
+html[data-patient-theme="dark"] body.rdv-booking-page .rdv-form input,
+html[data-patient-theme="dark"] body.rdv-booking-page .rdv-form select,
+html[data-patient-theme="dark"] body.rdv-booking-page .rdv-form textarea {
+  border-color: rgba(142, 182, 155, 0.28);
+  background: rgba(5, 31, 32, 0.55);
+  color: #daf1de;
+}
+
+html[data-patient-theme="dark"] body.rdv-booking-page .rdv-form select {
+  background-color: rgba(5, 31, 32, 0.55);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23daf1de' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.85rem center;
+  background-size: 12px 12px;
+}
+
+html[data-patient-theme="dark"] body.rdv-booking-page .rdv-form input:focus,
+html[data-patient-theme="dark"] body.rdv-booking-page .rdv-form select:focus,
+html[data-patient-theme="dark"] body.rdv-booking-page .rdv-form textarea:focus {
+  border-color: rgba(225, 247, 214, 0.45);
+  box-shadow: 0 0 0 3px rgba(35, 83, 71, 0.45);
+}
+
+html[data-patient-theme="dark"] body.rdv-booking-page .rdv-btn--primary {
+  background: linear-gradient(135deg, #235347, #163b32);
+  color: #f4fcf2;
+  box-shadow: 0 8px 26px rgba(5, 31, 32, 0.55), 0 0 24px rgba(142, 182, 155, 0.15);
+}
+
+html[data-patient-theme="dark"] body.rdv-booking-page .rdv-btn--ghost {
+  border-color: rgba(142, 182, 155, 0.38);
+  color: #daf1de;
+}
+
+html[data-patient-theme="dark"] body.rdv-booking-page .rdv-btn--ghost:hover {
+  border-color: rgba(225, 247, 214, 0.35);
+  color: #f4fcf2;
+}

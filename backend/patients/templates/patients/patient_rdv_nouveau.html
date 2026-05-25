@@ -1,0 +1,112 @@
+{% extends "accounts/base_patient_shell.html" %}
+{% load static %}
+{% block title %}Demander un RDV — CardioSoin{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/rdv-booking.css' %}?v=9">{% endblock %}
+{% block pdash_body_class %}pdash--rdv rdv-booking-page{% endblock %}
+{% block pdash_main_class %}pdash__main--rdv{% endblock %}
+{% block body_prefix %}
+  <div class="rdv-ecg-wrap" aria-hidden="true">
+    <div class="rdv-ecg-grid"></div>
+    <div class="rdv-ecg-field">
+      {% for _ in "123456789" %}
+      <div class="rdv-ecg-stripe">
+        <div class="rdv-ecg-track">
+          <div class="rdv-ecg-track-inner">
+            <div class="rdv-ecg-repeat">
+              {% for __ in "12345678" %}
+              {% include "patients/partials/ecg_svg.html" %}
+              {% endfor %}
+            </div>
+            <div class="rdv-ecg-repeat" aria-hidden="true">
+              {% for __ in "12345678" %}
+              {% include "patients/partials/ecg_svg.html" %}
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+{% endblock %}
+{% block patient_toolbar %}
+<div class="pdash-rdv-toolbar">
+  {% include "accounts/partials/patient_theme_toggle.html" %}
+</div>
+{% endblock %}
+{% block content %}
+    <div class="rdv-content-panel">
+      <header class="rdv-topbar">
+        <a href="{% url 'patient_space' %}">← Tableau de bord</a>
+        <a href="{% url 'patient_rendez_vous' %}">Historique</a>
+      </header>
+      <div class="rdv-booking">
+        <div class="rdv-booking__intro">
+          <h1 class="rdv-booking__title">Prendre un <span>rendez-vous</span></h1>
+          <p class="rdv-booking__lead">Choisissez un médecin, une date et une heure. Votre demande sera enregistrée et visible sur votre tableau de bord. En cas de conflit, des créneaux alternatifs vous sont proposés.</p>
+        </div>
+
+        <div class="rdv-stack">
+          {% if error %}
+          <div class="rdv-card rdv-card--error">
+            <p>{{ error }}</p>
+          </div>
+          {% endif %}
+          {% if alternatives %}
+          <div class="rdv-card rdv-card--alt">
+            <h2>Créneaux suggérés</h2>
+            <ul>
+              {% for a in alternatives %}
+              <li>{{ a|date:"d/m/Y à H:i" }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+          {% endif %}
+
+          {% if not medecins %}
+          <div class="rdv-card rdv-card--warn">
+            <p>Aucun médecin n’est enregistré pour le moment. Contactez le cabinet.</p>
+            <div class="rdv-warn-actions">
+              <a href="{% url 'patient_space' %}" class="rdv-btn rdv-btn--primary" style="display:inline-flex;justify-content:center;max-width:100%">Retour au tableau de bord</a>
+            </div>
+          </div>
+          {% else %}
+          <div class="rdv-card rdv-card--form">
+            <form method="post" class="rdv-form">
+              {% csrf_token %}
+              <div class="rdv-form__fields">
+                <div class="rdv-field">
+                  <label for="medecin">Médecin</label>
+                  <select name="medecin" id="medecin" required>
+                    <option value="">— Choisissez un médecin —</option>
+                    {% for m in medecins %}
+                    <option value="{{ m.id }}" {% if form_data.medecin == m.id|stringformat:"s" %}selected{% endif %}>Dr {{ m.user.get_full_name|default:m.user.username }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <div class="rdv-field-row rdv-field-row--2col">
+                  <div class="rdv-field">
+                    <label for="date">Date</label>
+                    <input type="date" name="date" id="date" value="{{ form_data.date|default:'' }}" min="{{ date_min }}" required>
+                  </div>
+                  <div class="rdv-field">
+                    <label for="heure">Heure</label>
+                    <input type="time" name="heure" id="heure" value="{{ form_data.heure|default:'09:00' }}" required>
+                  </div>
+                </div>
+                <div class="rdv-field">
+                  <label for="motif">Motif (optionnel)</label>
+                  <textarea name="motif" id="motif" rows="3" placeholder="Ex. contrôle tension, douleur thoracique…">{{ form_data.motif|default:'' }}</textarea>
+                </div>
+              </div>
+              <div class="rdv-actions">
+                <button type="submit" class="rdv-btn rdv-btn--primary">Enregistrer le rendez-vous</button>
+                <a href="{% url 'patient_space' %}" class="rdv-btn rdv-btn--ghost">Annuler</a>
+              </div>
+            </form>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+{% endblock %}

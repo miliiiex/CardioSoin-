@@ -1,0 +1,37 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr" class="cs-pro-site"{% block html_attrs %}{% endblock %}>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}CardioSoin{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/cardiosoin-glass.css' %}?v=14">
+    <link rel="stylesheet" href="{% static 'css/cardiosoin-professional-global.css' %}?v=13">
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="cs-page {% block body_class %}{% endblock %}">
+    <div class="cs-bg" aria-hidden="true">
+        <div class="cs-orb cs-orb--1"></div>
+        <div class="cs-orb cs-orb--2"></div>
+        <div class="cs-orb cs-orb--3"></div>
+        <div class="cs-grid"></div>
+    </div>
+    <div class="cs-shell {% block shell_class %}{% endblock %}">
+        {% if messages %}
+        <ul class="cs-messages">
+            {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% block page_wrap %}
+        {% block topbar %}{% endblock %}
+        <main>{% block content %}{% endblock %}</main>
+        {% endblock page_wrap %}
+    </div>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

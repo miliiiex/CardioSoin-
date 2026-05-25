@@ -1,0 +1,65 @@
+{# Étape 2 inscription : code e-mail après « Créer mon compte » #}
+<div class="reg-verify">
+  <div class="reg-verify__badge" aria-hidden="true">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+      <path d="M4 6h16v12H4V6Z" stroke-linejoin="round"/>
+      <path d="m4 7 8 6 8-6"/>
+    </svg>
+    <span>Vérification e-mail</span>
+  </div>
+
+  <p class="reg-verify__lede">
+    Un code à <strong>6 chiffres</strong> a été envoyé à
+    <span class="reg-verify__email">{{ pending_reg_email }}</span>.
+  </p>
+
+  {% if reg_info %}
+    <p class="reg-verify__info" role="status">{{ reg_info }}</p>
+  {% endif %}
+
+  <form method="post" action="" class="reg-verify__form" autocomplete="off">
+    {% csrf_token %}
+    <input type="hidden" name="action" value="register_confirm" />
+    {% if request.GET.next %}
+    <input type="hidden" name="next" value="{{ request.GET.next }}" />
+    {% endif %}
+    <label class="reg-verify__label" for="reg_code">Code de vérification</label>
+    <input
+      id="reg_code"
+      class="med-input reg-verify__code"
+      type="text"
+      name="reg_code"
+      inputmode="numeric"
+      pattern="[0-9]{6}"
+      maxlength="6"
+      placeholder="000000"
+      required
+      autocomplete="one-time-code"
+      autofocus
+    />
+    <button type="submit" class="med-btn reg-verify__submit">
+      Confirmer et accéder à mon espace
+    </button>
+  </form>
+
+  <div class="reg-verify__divider" aria-hidden="true">
+    <span>ou</span>
+  </div>
+
+  <div class="reg-verify__actions">
+    <form method="post" action="" class="reg-verify__action-form">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="register_resend" />
+      <button type="submit" class="reg-verify__btn reg-verify__btn--secondary">
+        Renvoyer le code
+      </button>
+    </form>
+    <form method="post" action="" class="reg-verify__action-form">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="register_cancel" />
+      <button type="submit" class="reg-verify__btn reg-verify__btn--ghost">
+        Modifier mes informations
+      </button>
+    </form>
+  </div>
+</div>

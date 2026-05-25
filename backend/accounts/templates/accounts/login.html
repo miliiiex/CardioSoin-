@@ -1,0 +1,180 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Connexion & inscription — CardioSoin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/split-medical.css' %}?v=2">
+  <link rel="stylesheet" href="{% static 'css/login-page.css' %}?v=4">
+  <link rel="stylesheet" href="{% static 'css/email-verification.css' %}?v=4">
+  <script defer src="{% static 'js/auth-flip.js' %}"></script>
+  <script defer src="{% static 'js/validate-birthdate.js' %}"></script>
+  <script>
+    window.addEventListener("pageshow", function (e) {
+      if (e.persisted) window.location.reload();
+    });
+  </script>
+  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+</head>
+<body>
+  <div class="med-auth">
+    <div class="med-ambient" aria-hidden="true">
+      <span class="med-ambient__b med-ambient__b--1"></span>
+      <span class="med-ambient__b med-ambient__b--2"></span>
+      <span class="med-ambient__b med-ambient__b--3"></span>
+    </div>
+    <div class="med-auth__bg" style="background-image: url('{% static 'images/hospital.png' %}');"></div>
+    <div class="med-auth__bg--blur" aria-hidden="true"></div>
+    <div class="med-auth__vignette" aria-hidden="true"></div>
+
+    <div class="med-shell cauth-wrap">
+      <div class="med-auth__inner">
+        <div class="med-panel--left">
+          <a class="med-back" href="{% url 'landing' %}">← Accueil</a>
+          <div class="med-head">
+            <span class="med-chip">Espace patient</span>
+          </div>
+          <h1>CardioSoin</h1>
+          <p class="med-sub">Rendez-vous, suivi et ordonnances en toute simplicité.</p>
+
+          <div
+            id="medFlip"
+            class="{% if reg_error or reg_info or open_register %}is-register{% endif %}"
+          >
+            <div class="cauth-seg" role="tablist" aria-label="Choisir le mode">
+              <button
+                type="button"
+                class="cauth-seg__btn"
+                id="medBtnLogin"
+                role="tab"
+                aria-selected="{% if not reg_error and not open_register %}true{% else %}false{% endif %}"
+                aria-controls="cauth-form-login"
+              >Connexion</button>
+              <button
+                type="button"
+                class="cauth-seg__btn"
+                id="medBtnRegister"
+                role="tab"
+                aria-selected="{% if reg_error or reg_info or open_register %}true{% else %}false{% endif %}"
+                aria-controls="cauth-form-reg"
+              >Inscription</button>
+            </div>
+
+            <div class="cauth-form cauth-form--login" id="cauth-form-login" role="tabpanel" aria-label="Connexion" {% if reg_error or open_register %}aria-hidden="true"{% else %}aria-hidden="false"{% endif %}>
+              <p class="med-hint" style="margin-top:0">Identifiez-vous pour accéder à votre espace.</p>
+              {% if error %}
+                <p class="med-error" role="alert">{{ error }}</p>
+              {% endif %}
+              <form method="post" action="" autocomplete="on">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="login" />
+                {% if request.GET.next %}
+                <input type="hidden" name="next" value="{{ request.GET.next }}" />
+                {% endif %}
+                <input
+                  class="med-input"
+                  type="text"
+                  name="email"
+                  placeholder="E-mail ou nom d’utilisateur"
+                  value="{{ request.POST.email|default:'' }}"
+                  required
+                  autocomplete="username"
+                />
+                <input
+                  class="med-input"
+                  type="password"
+                  name="password"
+                  placeholder="Mot de passe"
+                  required
+                  autocomplete="current-password"
+                />
+                <label class="cauth-remember">
+                  <input type="checkbox" name="remember" value="1" />
+                  Se souvenir de moi
+                </label>
+                <button type="submit" class="med-btn" style="width: 100%; margin-top: 0.25rem;">Se connecter</button>
+              </form>
+              <p class="med-hint med-hint--centerLink">Mot de passe oublié ? <a href="{% url 'password_forgot' %}" class="med-auth-note-link">Réinitialiser par e-mail</a></p>
+            </div>
+
+            <div class="cauth-form cauth-form--reg" id="cauth-form-reg" role="tabpanel" aria-label="Inscription" {% if not reg_error and not open_register and not reg_info %}aria-hidden="true"{% else %}aria-hidden="false"{% endif %}>
+              {% if register_verify_step %}
+              <p class="med-hint" style="margin-top:0">Dernière étape : vérifiez votre e-mail pour activer le compte.</p>
+              {% if reg_error %}
+                <p class="med-error" role="alert">{{ reg_error }}</p>
+              {% endif %}
+              {% include "accounts/partials/register_verify_step.html" %}
+              {% else %}
+              <p class="med-hint" style="margin-top:0">Créez un compte patient : vos informations alimentent votre dossier.</p>
+              {% if reg_error %}
+                <p class="med-error" role="alert">{{ reg_error }}</p>
+              {% endif %}
+              <form method="post" action="" autocomplete="on">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="register" />
+                {% if request.GET.next %}
+                <input type="hidden" name="next" value="{{ request.GET.next }}" />
+                {% endif %}
+                <div class="cauth-row2">
+                  <div>
+                    <label for="r_user">Utilisateur *</label>
+                    <input id="r_user" class="med-input" type="text" name="reg_username" value="{{ request.POST.reg_username|default:'' }}" required autocomplete="username" />
+                  </div>
+                  <div>
+                    <label for="r_mail">E-mail *</label>
+                    <input id="r_mail" class="med-input" type="email" name="reg_email" value="{{ request.POST.reg_email|default:'' }}" required autocomplete="email" />
+                  </div>
+                </div>
+                <div class="cauth-row2">
+                  <div>
+                    <label for="r_fn">Prénom</label>
+                    <input id="r_fn" class="med-input" type="text" name="reg_first_name" value="{{ request.POST.reg_first_name|default:'' }}" autocomplete="given-name" />
+                  </div>
+                  <div>
+                    <label for="r_ln">Nom</label>
+                    <input id="r_ln" class="med-input" type="text" name="reg_last_name" value="{{ request.POST.reg_last_name|default:'' }}" autocomplete="family-name" />
+                  </div>
+                </div>
+                <div>
+                  <label for="r_dob">Date de naissance *</label>
+                  <input id="r_dob" class="med-input" type="date" name="reg_date_naissance" value="{{ request.POST.reg_date_naissance|default:'' }}" required min="{{ reg_date_min }}" max="{{ reg_date_max }}" />
+                </div>
+                <div>
+                  <label for="r_tel">Téléphone *</label>
+                  <input id="r_tel" class="med-input" type="tel" name="reg_telephone" value="{{ request.POST.reg_telephone|default:'' }}" required autocomplete="tel" />
+                </div>
+                <div>
+                  <label for="r_adr">Adresse</label>
+                  <textarea id="r_adr" class="med-input" name="reg_adresse" rows="2" placeholder="Ville, rue…" autocomplete="street-address">{{ request.POST.reg_adresse|default:'' }}</textarea>
+                </div>
+                <div class="cauth-row2">
+                  <div>
+                    <label for="r_pw1">Mot de passe *</label>
+                    <input id="r_pw1" class="med-input" type="password" name="reg_password" required minlength="6" autocomplete="new-password" />
+                  </div>
+                  <div>
+                    <label for="r_pw2">Confirmer *</label>
+                    <input id="r_pw2" class="med-input" type="password" name="reg_password2" required minlength="6" autocomplete="new-password" />
+                  </div>
+                </div>
+                <button type="submit" class="med-btn" style="width: 100%; margin-top: 0.4rem;">Créer mon compte</button>
+              </form>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+        <div class="med-panel--right">
+          <h2>Prenez soin de votre cœur</h2>
+          <p>Accédez à votre agenda, vos documents et le suivi de votre parcours de soin, en un espace conçu pour le cabinet.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

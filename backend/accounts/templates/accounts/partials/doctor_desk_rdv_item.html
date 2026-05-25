@@ -1,0 +1,22 @@
+<article
+  class="sec-dash-appt sec-dash-appt--{{ r.statut }}"
+  {% if show_data_date %}data-date="{{ r.date_heure|date:'Y-m-d' }}"{% endif %}
+>
+  <div class="sec-dash-appt__bar" aria-hidden="true"></div>
+  <div class="sec-dash-appt__body">
+    <p class="sec-dash-appt__time">{{ r.date_heure|date:"d/m/Y" }} · {{ r.date_heure|date:"H:i" }}</p>
+    {% if r.patient_id %}
+      <p class="sec-dash-appt__patient">
+        <a href="{% url 'doctor_dossier' r.patient_id %}">{{ r.demandeur_nom_affiche }}</a>
+      </p>
+    {% else %}
+      <p class="sec-dash-appt__patient">{{ r.demandeur_nom_affiche }}</p>
+      {% if r.guest_email %}<p class="sec-dash-appt__doc">Visiteur&nbsp;: {{ r.guest_email }}</p>{% endif %}
+    {% endif %}
+    {% if r.motif %}
+      <p class="sec-dash-appt__doc">{{ r.motif|truncatewords:16 }}</p>
+    {% endif %}
+    <p class="sec-dash-appt__doc">Dr {{ r.medecin.user.get_full_name|default:r.medecin.user.username }}</p>
+    <span class="sec-dash-appt__status sec-dash-appt__status--{{ r.statut }}">{{ r.get_statut_display }}</span>
+  </div>
+</article>

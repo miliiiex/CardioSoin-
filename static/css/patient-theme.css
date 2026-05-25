@@ -1,0 +1,74 @@
+/* Interrupteur thème clair / sombre — espace patient (.pdash) */
+
+.pdash__top-meta-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.pdash-theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  border-radius: 0;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  background: rgba(255, 255, 255, 0.08);
+  color: #e2e8f0;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.2s, border-color 0.2s, color 0.2s, transform 0.15s;
+}
+html[data-patient-theme="dark"] .pdash-theme-toggle {
+  border-color: rgba(218, 241, 222, 0.2);
+  background: rgba(5, 31, 32, 0.55);
+  color: #daf1de;
+}
+.pdash-theme-toggle:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(142, 182, 155, 0.32);
+  color: #daf1de;
+}
+.pdash-theme-toggle:active {
+  transform: scale(0.96);
+}
+.pdash-theme-toggle svg {
+  display: block;
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
+/* Soleil = proposer le passage au clair ; lune = proposer le passage au sombre */
+html[data-patient-theme="dark"] .pdash-theme-toggle [data-theme-icon="moon"] {
+  display: none;
+}
+html[data-patient-theme="dark"] .pdash-theme-toggle [data-theme-icon="sun"] {
+  display: block;
+}
+html[data-patient-theme="light"] .pdash-theme-toggle [data-theme-icon="sun"] {
+  display: none;
+}
+html[data-patient-theme="light"] .pdash-theme-toggle [data-theme-icon="moon"] {
+  display: block;
+}
+
+html[data-patient-theme="dark"] .pdash-theme-toggle:hover {
+  border-color: rgba(142, 182, 155, 0.4);
+  color: #e1f7d6;
+  background: rgba(35, 83, 71, 0.35);
+}
+
+html[data-patient-theme="light"] .pdash-theme-toggle {
+  border-color: rgba(132, 164, 113, 0.35);
+  background: rgba(244, 252, 242, 0.95);
+  color: #1e2e1c;
+}
+html[data-patient-theme="light"] .pdash-theme-toggle:hover {
+  background: #e1f7d6;
+  border-color: rgba(132, 164, 113, 0.5);
+  color: #4a6340;
+}

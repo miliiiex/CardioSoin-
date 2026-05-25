@@ -1,0 +1,200 @@
+/* Profil médecin / secrétaire — carte photo + formulaire */
+.staff-profil {
+  max-width: 52rem;
+  margin: 0 auto;
+}
+.staff-profil__hero {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: 1fr;
+  align-items: start;
+  margin-bottom: 1.5rem;
+}
+@media (min-width: 640px) {
+  .staff-profil__hero {
+    grid-template-columns: auto 1fr;
+    align-items: center;
+  }
+}
+.staff-profil__avatar-wrap {
+  position: relative;
+  width: 8.5rem;
+  height: 8.5rem;
+  border-radius: 0;
+  overflow: hidden;
+  background: linear-gradient(145deg, rgba(99, 102, 241, 0.35), rgba(45, 212, 191, 0.2));
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 8px 32px rgba(15, 23, 42, 0.35);
+}
+.staff-profil__avatar-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.staff-profil__avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--cs-font-display, "Cormorant Garamond", serif);
+  font-size: 2.25rem;
+  font-weight: 600;
+  color: rgba(240, 253, 250, 0.95);
+  letter-spacing: 0.02em;
+}
+.staff-profil__hero-txt .cs-hero-title {
+  margin-bottom: 0.25rem;
+}
+.staff-profil__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background: rgba(45, 212, 191, 0.12);
+  color: #5eead4;
+  border: 1px solid rgba(45, 212, 191, 0.35);
+  margin-top: 0.35rem;
+}
+.staff-profil__grid {
+  display: grid;
+  gap: 1.25rem;
+}
+@media (min-width: 720px) {
+  .staff-profil__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.staff-profil__card-wide {
+  grid-column: 1 / -1;
+}
+.staff-profil__hint {
+  font-size: 0.8rem;
+  color: rgba(226, 232, 240, 0.65);
+  margin-top: 0.35rem;
+}
+
+/* Upload photo (champ fichier amélioré) */
+.staff-profil .prof-photo__title {
+  margin: 0 0 0.45rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--cs-muted2, #4d5e54);
+}
+.staff-profil .prof-photo__zone {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.65rem 0.85rem;
+  padding: 0.65rem 0.85rem;
+  border: 1px dashed rgba(98, 120, 105, 0.45);
+  background: rgba(255, 255, 255, 0.35);
+}
+.staff-profil .prof-photo__trigger {
+  position: relative;
+  flex-shrink: 0;
+  width: 2.75rem;
+  height: 2.75rem;
+}
+.staff-profil .prof-photo__native {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 0;
+  min-height: 0;
+  margin: 0 !important;
+  padding: 0 !important;
+  opacity: 0;
+  cursor: pointer;
+  font-size: 0;
+  line-height: 0;
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  color: transparent !important;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.staff-profil .prof-photo__native::-webkit-file-upload-button {
+  display: none !important;
+}
+.staff-profil .prof-photo__native::file-selector-button {
+  display: none !important;
+}
+.staff-profil .prof-photo__icon {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0;
+  border: 1px solid rgba(96, 140, 110, 0.4);
+  background: rgba(244, 252, 240, 0.95);
+  color: #3d6b4f;
+  pointer-events: none;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+.staff-profil .prof-photo__trigger:hover .prof-photo__icon {
+  background: rgba(208, 235, 188, 0.75);
+  border-color: rgba(61, 107, 79, 0.5);
+  color: #2d4a32;
+}
+.staff-profil .prof-photo__trigger:focus-within .prof-photo__icon {
+  outline: 2px solid rgba(61, 107, 79, 0.55);
+  outline-offset: 2px;
+}
+.staff-profil .prof-photo__name {
+  font-size: 0.82rem;
+  color: var(--cs-muted, #5a6d62);
+  min-width: 0;
+  flex: 1 1 8rem;
+  word-break: break-word;
+}
+.staff-profil .prof-photo__hint {
+  margin: 0.45rem 0 0;
+  font-size: 0.75rem;
+  color: rgba(90, 109, 98, 0.85);
+}
+
+/* Profil secrétaire — même grille / cartes que l’espace patient (paccv2) */
+.cs-desk-main .secpro-pacc.paccv2__main {
+  padding-top: 0.25rem;
+  padding-bottom: 2.5rem;
+}
+.secpro-pacc__role {
+  margin: 0.35rem 0 0;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(142, 182, 155, 0.95);
+}
+
+html[data-patient-theme="light"] .secpro-pacc__role {
+  color: #6b8558;
+}
+
+/* Espace médecin — thème clair (aligné secrétaire / compte patient) */
+html[data-patient-theme="light"] body.doctor-cabinet.staff-nude .cs-desk-body {
+  background: linear-gradient(
+    168deg,
+    rgba(244, 252, 242, 0.72) 0%,
+    rgba(232, 246, 224, 0.5) 42%,
+    rgba(218, 236, 206, 0.38) 100%
+  );
+}
+
+html[data-patient-theme="light"] body.doctor-cabinet.staff-nude .cs-desk-main .secpro-pacc.paccv2__main {
+  color: #1a2e1a;
+}

@@ -1,0 +1,46 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr" data-patient-theme="light">
+<script>
+(function(){try{var k='cardiosoin-patient-theme';var t=localStorage.getItem(k);if(t!=='light'&&t!=='dark')t='light';document.documentElement.setAttribute('data-patient-theme',t);}catch(e){document.documentElement.setAttribute('data-patient-theme','light');}})();
+</script>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}CardioSoin{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/auth-patient.css' %}?v=2">
+  <link rel="stylesheet" href="{% static 'css/patient-theme-light.css' %}?v=8">
+  <link rel="stylesheet" href="{% static 'css/patient-theme.css' %}">
+  <link rel="stylesheet" href="{% static 'css/patient-green-palette.css' %}?v=7">
+  {% block extra_css %}{% endblock %}
+  <script defer src="{% static 'js/patient-theme.js' %}"></script>
+  {% block extra_js %}{% endblock %}
+</head>
+<body class="pdash {% block pdash_body_class %}{% endblock %}">
+{% block body_prefix %}{% endblock %}
+<div class="pdash__ambient" aria-hidden="true">
+  <span class="pdash__orb pdash__orb--1"></span>
+  <span class="pdash__orb pdash__orb--2"></span>
+  <span class="pdash__orb pdash__orb--3"></span>
+</div>
+<div class="pdash__bg" style="background-image: url('{% static 'images/hospital.png' %}');" aria-hidden="true"></div>
+<div class="pdash__veil" aria-hidden="true"></div>
+
+{% include "accounts/partials/patient_shell_nav.html" with nav_active=nav_active %}
+
+<div class="pdash__main {% block pdash_main_class %}{% endblock %}">
+  {% if messages %}
+  <ul class="pdash__flash" role="status">
+    {% for message in messages %}
+    <li class="pdash__flash-item{% if message.tags %} pdash__flash-item--{{ message.tags }}{% endif %}">{{ message }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+  {% block patient_toolbar %}{% endblock %}
+  {% block content %}{% endblock %}
+</div>
+</body>
+</html>

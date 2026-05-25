@@ -1,0 +1,245 @@
+.email-verify {
+  margin: 0.75rem 0 1rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid rgba(132, 164, 113, 0.28);
+  background: rgba(15, 23, 42, 0.25);
+  border-radius: 0;
+}
+
+.email-verify__lede {
+  margin: 0 0 0.65rem;
+  font-size: 0.85rem;
+  opacity: 0.9;
+}
+
+.email-verify__actions {
+  margin-bottom: 0.65rem;
+}
+
+.email-verify__code-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.5rem 0.65rem;
+}
+
+.email-verify__label {
+  flex: 1 1 100%;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.email-verify__input {
+  flex: 1 1 8rem;
+  min-width: 7rem;
+  padding: 0.55rem 0.65rem;
+  font: inherit;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  background: rgba(255, 255, 255, 0.06);
+  color: inherit;
+  border-radius: 0;
+}
+
+.email-verify__btn {
+  padding: 0.55rem 0.85rem;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid rgba(132, 164, 113, 0.45);
+  background: rgba(35, 83, 71, 0.55);
+  color: #f4fcf2;
+  border-radius: 0;
+}
+
+.email-verify__btn:hover:not(:disabled) {
+  background: rgba(45, 110, 95, 0.75);
+}
+
+.email-verify__btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.email-verify__status {
+  margin: 0.55rem 0 0;
+  font-size: 0.82rem;
+  min-height: 1.2em;
+}
+
+.email-verify__status.is-ok {
+  color: #86efac;
+}
+
+.email-verify__status.is-err {
+  color: #fca5a5;
+}
+
+.email-verify.is-verified {
+  border-color: rgba(134, 239, 172, 0.45);
+}
+
+html[data-patient-theme="light"] .email-verify {
+  background: rgba(244, 252, 240, 0.9);
+  border-color: rgba(96, 140, 110, 0.28);
+}
+
+html[data-patient-theme="light"] .email-verify__input {
+  background: #fff;
+  border-color: rgba(96, 140, 110, 0.28);
+  color: #1e2e1c;
+}
+
+html[data-patient-theme="light"] .email-verify__btn {
+  background: linear-gradient(135deg, #6b8558, #84a471);
+  color: #f4fcf2;
+}
+
+html[data-patient-theme="light"] .email-verify__status.is-ok {
+  color: #15803d;
+}
+
+html[data-patient-theme="light"] .email-verify__status.is-err {
+  color: #b91c1c;
+}
+
+.med-form-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.med-form-stack label {
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.email-verify__setup {
+  margin-top: 0.65rem;
+  font-size: 0.88rem;
+}
+
+.email-verify__setup a {
+  color: #5eead4;
+  font-weight: 600;
+}
+
+html[data-patient-theme="light"] .email-verify__setup a {
+  color: #0d9488;
+}
+
+/* Changement MDP en 2 étapes */
+.pwd-wizard {
+  margin-top: 0.5rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid rgba(132, 164, 113, 0.35);
+  border-radius: 8px;
+  background: rgba(15, 23, 42, 0.2);
+}
+
+.pwd-wizard__lede {
+  margin: 0 0 0.75rem;
+  font-size: 0.84rem;
+  opacity: 0.92;
+}
+
+.pwd-wizard__lede--ok {
+  color: #86efac;
+}
+
+.pwd-wizard__row {
+  margin-bottom: 0.65rem;
+}
+
+.pwd-wizard__label {
+  display: block;
+  margin-bottom: 0.3rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.pwd-wizard__input {
+  width: 100%;
+  max-width: 22rem;
+  padding: 0.55rem 0.65rem;
+  font: inherit;
+  font-size: 0.9rem;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  background: rgba(255, 255, 255, 0.06);
+  color: inherit;
+  border-radius: 0;
+  box-sizing: border-box;
+}
+
+.pwd-wizard__code-line {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.pwd-wizard__input--code {
+  flex: 1 1 7rem;
+  max-width: 9rem;
+  letter-spacing: 0.12em;
+  text-align: center;
+}
+
+.pwd-wizard__actions {
+  margin-bottom: 0.65rem;
+}
+
+.pwd-wizard__btn {
+  padding: 0.55rem 0.9rem;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid rgba(132, 164, 113, 0.45);
+  background: rgba(35, 83, 71, 0.55);
+  color: #f4fcf2;
+  border-radius: 0;
+}
+
+.pwd-wizard__btn:hover:not(:disabled) {
+  background: rgba(45, 110, 95, 0.75);
+}
+
+.pwd-wizard__btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.pwd-wizard__status {
+  margin-top: 0.5rem;
+}
+
+.pwd-wizard__fields {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-width: 22rem;
+}
+
+.pwd-wizard.is-verified .pwd-wizard__step--verify {
+  display: none;
+}
+
+html[data-patient-theme="light"] .pwd-wizard {
+  background: rgba(244, 252, 240, 0.95);
+  border-color: rgba(96, 140, 110, 0.3);
+}
+
+html[data-patient-theme="light"] .pwd-wizard__input {
+  background: #fff;
+  color: #1e2e1c;
+}
+
+html[data-patient-theme="light"] .pwd-wizard__btn {
+  background: linear-gradient(135deg, #6b8558, #84a471);
+}
+
+html[data-patient-theme="light"] .pwd-wizard__lede--ok {
+  color: #15803d;
+}

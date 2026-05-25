@@ -1,0 +1,64 @@
+{% extends "accounts/base_staff.html" %}
+{% load static %}
+{% block title %}Connexion — Personnel CardioSoin{% endblock %}
+{% block extra_css %}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/staff-login.css' %}">
+{% endblock %}
+{% block content %}
+<div class="staff-login">
+  <div class="staff-login__card">
+    <a class="staff-login__back" href="{% url 'landing' %}">← Retour à l’accueil</a>
+
+    <div class="staff-login__brand">
+      <div class="staff-login__lock" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" xmlns="http://www.w3.org/2000/svg" focusable="false">
+          <defs>
+            <linearGradient id="slLockStroke" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#ecfdf5"/>
+              <stop offset="0.5" stop-color="#5eead4"/>
+              <stop offset="1" stop-color="#0d9488"/>
+            </linearGradient>
+          </defs>
+          <path d="M7 11V8a5 5 0 0 1 10 0v3" fill="none" stroke="url(#slLockStroke)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <rect x="4.5" y="11" width="15" height="10.5" rx="2.75" fill="rgba(20,184,166,0.12)" stroke="url(#slLockStroke)" stroke-width="2"/>
+          <path d="M12 15.3v2.6" stroke="url(#slLockStroke)" stroke-width="1.85" stroke-linecap="round"/>
+          <circle cx="12" cy="15.25" r="1.4" fill="#134e4a"/>
+        </svg>
+      </div>
+      <h1 class="staff-login__title"><span>Connexion</span> personnelle</h1>
+    </div>
+    <p class="staff-login__lead">Accès réservé au <strong>personnel du cabinet</strong> — l’ouverture de session adaptée votre rôle (médecin ou secrétariat).</p>
+    <p class="staff-login__hint">Comptes patients : utilisez l’<a class="staff-login__hint-a" href="{% url 'login' %}">espace public</a>.</p>
+
+    {% if error %}
+    <div class="staff-login__err" role="alert">
+      <p>{{ error }}</p>
+    </div>
+    {% endif %}
+
+    <form class="staff-login__form" method="post" action="{% url 'staff_login' %}" novalidate>
+      {% csrf_token %}
+      <label class="cs-label" for="staff-email">E-mail</label>
+      <input class="cs-input" type="email" name="email" id="staff-email" placeholder="adresse@cabinet…" required autocomplete="email" inputmode="email">
+      <label class="cs-label" for="staff-password">Mot de passe</label>
+      <input class="cs-input" type="password" name="password" id="staff-password" placeholder="••••••••" required autocomplete="current-password">
+      <p class="staff-login__hint" style="margin-top:0.5rem;">
+        <a class="staff-login__hint-a" href="{% url 'password_forgot' %}">Mot de passe oublié ?</a>
+      </p>
+      <div class="staff-login__actions">
+        <button type="submit" class="staff-login__submit">Se connecter</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+  window.addEventListener("pageshow", function (e) {
+    if (e.persisted) window.location.reload();
+  });
+</script>
+{% endblock %}

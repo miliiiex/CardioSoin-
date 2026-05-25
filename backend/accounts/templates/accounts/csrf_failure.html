@@ -1,0 +1,15 @@
+{% extends "accounts/base_portal.html" %}
+{% block title %}Session expirée — CardioSoin{% endblock %}
+{% block body_class %}staff-nude{% endblock %}
+{% block content %}
+<div class="staff-login" style="max-width: 28rem; margin: 2rem auto;">
+  <div class="staff-login__card">
+    <h1 class="staff-login__title"><span>Session</span> expirée</h1>
+    <p class="staff-login__lead">{{ message }}</p>
+    <p class="staff-login__hint">
+      <a class="staff-login__hint-a" href="javascript:location.reload()">Recharger la page</a>
+      · <a class="staff-login__hint-a" href="{% url 'landing' %}">Accueil</a>
+    </p>
+  </div>
+</div>
+{% endblock %}

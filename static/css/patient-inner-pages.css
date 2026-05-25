@@ -1,0 +1,467 @@
+/**
+ * Pages patient « simples » (liste RDV, ordonnances, annulation) dans le shell .pdash.
+ */
+.patient-page-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.patient-back-nav {
+  margin: 0 0 1.15rem;
+}
+
+.patient-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.85rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  font-family: inherit;
+  text-decoration: none;
+  color: #c4b5fd;
+  background: rgba(15, 23, 42, 0.45);
+  border: 1px solid rgba(196, 181, 253, 0.35);
+  border-radius: 0;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.patient-back-link:hover {
+  color: #ede9fe;
+  background: rgba(30, 27, 75, 0.55);
+  border-color: rgba(196, 181, 253, 0.55);
+}
+
+.patient-back-link:focus-visible {
+  outline: 2px solid rgba(196, 181, 253, 0.85);
+  outline-offset: 2px;
+}
+
+.patient-back-link__icon {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+html[data-patient-theme="light"] .patient-back-link {
+  color: #1e3d2c;
+  background: rgba(244, 252, 240, 0.95);
+  border-color: rgba(96, 140, 110, 0.35);
+}
+
+html[data-patient-theme="light"] .patient-back-link:hover {
+  color: #143d28;
+  background: rgba(208, 235, 188, 0.92);
+  border-color: rgba(96, 140, 110, 0.5);
+}
+
+.patient-page-head .pdash__top-meta-actions {
+  flex-shrink: 0;
+}
+
+.patient-page-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-bottom: 1rem;
+}
+
+.patient-table-wrap {
+  overflow-x: auto;
+}
+
+table.patient-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+table.patient-table th,
+table.patient-table td {
+  padding: 0.65rem 0.75rem;
+  text-align: left;
+  vertical-align: middle;
+}
+
+table.patient-table thead th {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+table.patient-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.patient-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.62rem 1.1rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  font-family: inherit;
+  text-decoration: none;
+  border-radius: 0;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+
+.patient-btn--primary {
+  background: linear-gradient(135deg, #235347, #163b32);
+  color: #f4fcf2;
+}
+
+.patient-btn--danger {
+  background: rgba(185, 28, 28, 0.92);
+  border-color: rgba(248, 113, 113, 0.45);
+  color: #fef2f2;
+}
+
+.patient-btn--ghost {
+  background: transparent;
+  border-color: rgba(218, 241, 222, 0.22);
+  color: #daf1de;
+}
+
+html[data-patient-theme="light"] table.patient-table th {
+  color: #5a7449;
+  border-bottom: 1px solid rgba(132, 164, 113, 0.45);
+}
+
+html[data-patient-theme="light"] table.patient-table td {
+  color: #1e2e1c;
+  border-bottom: 1px solid rgba(132, 164, 113, 0.28);
+}
+
+html[data-patient-theme="light"] table.patient-table a {
+  color: #6b8558;
+  font-weight: 600;
+}
+
+html[data-patient-theme="light"] .patient-btn--primary {
+  background: linear-gradient(135deg, #6b8558, #84a471);
+  color: #f4fcf2;
+}
+
+html[data-patient-theme="light"] .patient-btn--ghost {
+  border-color: rgba(132, 164, 113, 0.42);
+  color: #3d5834;
+}
+
+html[data-patient-theme="light"] .patient-btn--danger {
+  background: #b91c1c;
+  color: #fff;
+}
+
+html[data-patient-theme="dark"] table.patient-table th {
+  color: #beb69b;
+  border-bottom: 1px solid rgba(218, 241, 222, 0.2);
+}
+
+html[data-patient-theme="dark"] table.patient-table td {
+  color: #daf1de;
+  border-bottom: 1px solid rgba(218, 241, 222, 0.12);
+}
+
+html[data-patient-theme="dark"] table.patient-table a {
+  color: #eaf7ee;
+  font-weight: 600;
+}
+
+html[data-patient-theme="dark"] .patient-btn--ghost {
+  border-color: rgba(218, 241, 222, 0.22);
+  color: #daf1de;
+}
+
+/* Hub portail (cartes style dashboard léger) */
+.patient-hub-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  margin-top: 1rem;
+}
+
+.patient-hub-card {
+  padding: 1.15rem 1.25rem;
+  border-radius: 0;
+  border: 1px solid rgba(218, 241, 222, 0.14);
+  background: rgba(22, 59, 50, 0.4);
+  backdrop-filter: blur(12px);
+}
+
+html[data-patient-theme="light"] .patient-hub-card {
+  border-color: rgba(132, 164, 113, 0.38);
+  background: linear-gradient(165deg, rgba(244, 252, 242, 0.98) 0%, rgba(225, 247, 214, 0.92) 100%);
+}
+
+html[data-patient-theme="dark"] .patient-hub-card {
+  border-color: rgba(218, 241, 222, 0.16);
+  background: rgba(22, 59, 50, 0.58);
+}
+
+.patient-hub-card h2 {
+  margin: 0 0 0.65rem;
+  font-family: "Syne", system-ui, sans-serif;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+html[data-patient-theme="light"] .patient-hub-card h2 {
+  color: #1e2e1c;
+}
+
+html[data-patient-theme="dark"] .patient-hub-card h2 {
+  color: #daf1de;
+}
+
+.patient-hub-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+
+.patient-hub-nav a {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 0.85rem;
+  font-weight: 600;
+  font-size: 0.86rem;
+  text-decoration: none;
+  border-radius: 0;
+  border: 1px solid rgba(218, 241, 222, 0.18);
+}
+
+html[data-patient-theme="light"] .patient-hub-nav a {
+  background: rgba(244, 252, 242, 0.95);
+  color: #4a6340;
+  border-color: rgba(132, 164, 113, 0.38);
+}
+
+html[data-patient-theme="dark"] .patient-hub-nav a {
+  background: rgba(11, 43, 38, 0.85);
+  color: #daf1de;
+}
+
+/* Jauge risque (hub portail, sans cardiosoin-glass.css) */
+.patient-risk-gauge {
+  height: 8px;
+  background: rgba(132, 164, 113, 0.28);
+  overflow: hidden;
+  border-radius: 0;
+}
+
+.patient-risk-gauge__bar {
+  display: block;
+  height: 100%;
+  min-width: 0;
+}
+
+.patient-risk-gauge__bar--faible {
+  background: linear-gradient(90deg, #235347, #8eb69b);
+}
+
+html[data-patient-theme="light"] .patient-risk-gauge__bar--faible {
+  background: linear-gradient(90deg, #cfedc1, #84a471);
+}
+
+html[data-patient-theme="dark"] .patient-risk-gauge {
+  background: rgba(218, 241, 222, 0.1);
+}
+
+.patient-risk-gauge__bar--modere {
+  background: linear-gradient(90deg, #ca8a04, #eab308);
+}
+
+.patient-risk-gauge__bar--eleve {
+  background: linear-gradient(90deg, #b91c1c, #dc2626);
+}
+
+/* Dossiers ordonnances / documents par rendez-vous */
+.patient-doc-dossiers {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.patient-doc-dossier {
+  border: 1px solid rgba(218, 241, 222, 0.18);
+  background: rgba(11, 43, 38, 0.35);
+}
+
+.patient-doc-dossier__summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.85rem 1rem;
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+}
+
+.patient-doc-dossier__summary::-webkit-details-marker {
+  display: none;
+}
+
+.patient-doc-dossier__main {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.patient-doc-dossier__title {
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.01em;
+}
+
+.patient-doc-dossier__meta {
+  font-size: 0.8rem;
+  opacity: 0.82;
+}
+
+.patient-doc-dossier__chev {
+  flex-shrink: 0;
+  width: 0.55rem;
+  height: 0.55rem;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg);
+  opacity: 0.75;
+  transition: transform 0.2s ease;
+}
+
+.patient-doc-dossier[open] .patient-doc-dossier__chev {
+  transform: rotate(-135deg);
+  margin-top: 0.35rem;
+}
+
+.patient-doc-dossier__body {
+  padding: 0 1rem 1rem;
+  border-top: 1px solid rgba(218, 241, 222, 0.1);
+}
+
+.patient-doc-dossier__rdv-link {
+  margin: 0.75rem 0 0;
+  font-size: 0.85rem;
+}
+
+.patient-doc-dossier__rdv-link a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.patient-doc-dossier__section-title {
+  margin: 0.85rem 0 0.45rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.88;
+}
+
+.patient-doc-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.patient-doc-list__item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem 1rem;
+  padding: 0.65rem 0;
+  border-bottom: 1px solid rgba(218, 241, 222, 0.1);
+}
+
+.patient-doc-list__item:last-child {
+  border-bottom: none;
+}
+
+.patient-doc-list__info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.patient-doc-list__label {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.patient-doc-list__date,
+.patient-doc-list__hint {
+  font-size: 0.78rem;
+  opacity: 0.8;
+}
+
+.patient-doc-list__dl,
+.patient-doc-list__dl:visited {
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  white-space: nowrap;
+  color: #ffffff;
+}
+
+.patient-doc-list__dl:hover,
+.patient-doc-list__dl:focus-visible {
+  color: #f4fcf2;
+}
+
+html[data-patient-theme="dark"] .patient-doc-list__dl,
+html[data-patient-theme="dark"] .patient-doc-list__dl:visited,
+html[data-patient-theme="dark"] .patient-doc-list__dl:hover,
+html[data-patient-theme="dark"] .patient-doc-list__dl:focus-visible {
+  color: #ffffff;
+}
+
+html[data-patient-theme="light"] .patient-doc-list__dl {
+  color: #1e3419;
+}
+
+html[data-patient-theme="light"] .patient-doc-list__dl:visited {
+  color: #1e3419;
+}
+
+html[data-patient-theme="light"] .patient-doc-list__dl:hover,
+html[data-patient-theme="light"] .patient-doc-list__dl:focus-visible {
+  color: #0f2918;
+}
+
+.patient-doc-empty {
+  opacity: 0.8;
+  margin: 0;
+}
+
+.patient-doc-dossier__empty {
+  margin: 0.5rem 0 0;
+  font-size: 0.88rem;
+  opacity: 0.78;
+}
+
+html[data-patient-theme="light"] .patient-doc-dossier {
+  background: rgba(244, 252, 240, 0.92);
+  border-color: rgba(96, 140, 110, 0.22);
+}
+
+html[data-patient-theme="light"] .patient-doc-dossier__body {
+  border-top-color: rgba(96, 140, 110, 0.14);
+}
+
+html[data-patient-theme="light"] .patient-doc-list__item {
+  border-bottom-color: rgba(96, 140, 110, 0.12);
+}

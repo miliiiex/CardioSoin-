@@ -1,0 +1,70 @@
+{% extends "accounts/base_patient_shell.html" %}
+{% load static %}
+{% block title %}Ordonnances et documents — CardioSoin{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/patient-inner-pages.css' %}?v=6">{% endblock %}
+{% block patient_toolbar %}
+<div class="patient-page-head">
+  <div></div>
+  <div class="pdash__top-meta-actions">
+    {% include "accounts/partials/patient_theme_toggle.html" %}
+  </div>
+</div>
+{% endblock %}
+{% block content %}
+<section class="pdash-feed">
+  <div class="pdash-feed__head">
+    <h2 class="pdash-feed__title">Ordonnances et documents</h2>
+    <p class="pdash-feed__sub">
+      Chaque ligne correspond à un rendez-vous. Ouvrez-le pour voir et télécharger les documents de cette consultation.
+    </p>
+  </div>
+
+  {% if dossiers %}
+  <div class="patient-doc-dossiers">
+    {% for dossier in dossiers %}
+    <details class="patient-doc-dossier"{% if forloop.first %} open{% endif %}>
+      <summary class="patient-doc-dossier__summary">
+        <span class="patient-doc-dossier__main">
+          <span class="patient-doc-dossier__title">{{ dossier.label }}</span>
+          <span class="patient-doc-dossier__meta">{{ dossier.subtitle }}</span>
+        </span>
+        <span class="patient-doc-dossier__chev" aria-hidden="true"></span>
+      </summary>
+
+      <div class="patient-doc-dossier__body">
+        {% if dossier.items %}
+        <ul class="patient-doc-list">
+          {% for item in dossier.items %}
+          <li class="patient-doc-list__item">
+            <div class="patient-doc-list__info">
+              <span class="patient-doc-list__label">{{ item.label }}</span>
+              <span class="patient-doc-list__date">{{ item.date|date:"d/m/Y H:i" }}</span>
+              {% if item.hint %}
+              <span class="patient-doc-list__hint">{{ item.hint }}</span>
+              {% endif %}
+            </div>
+            {% if item.download_name == "telecharger_ordonnance" %}
+            <a class="patient-doc-list__dl" href="{% url 'telecharger_ordonnance' item.pk %}">Télécharger PDF</a>
+            {% else %}
+            <a class="patient-doc-list__dl" href="{% url 'telecharger_document_medical' item.pk %}">Télécharger PDF</a>
+            {% endif %}
+          </li>
+          {% endfor %}
+        </ul>
+        {% else %}
+        <p class="patient-doc-dossier__empty">Aucun document pour ce rendez-vous.</p>
+        {% endif %}
+        {% if dossier.rdv_pk %}
+        <p class="patient-doc-dossier__rdv-link">
+          <a href="{% url 'patient_rendez_vous_detail' dossier.rdv_pk %}?from=ordonnances">Détails du rendez-vous</a>
+        </p>
+        {% endif %}
+      </div>
+    </details>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p class="patient-doc-empty">Vous n’avez pas encore de rendez-vous enregistré.</p>
+  {% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,60 @@
+{% if absences_historique %}
+
+<section class="cs-glass cs-glass--pad cs-glass--lift sec-abs-hist" aria-labelledby="sec-abs-hist-title">
+
+  <h2 class="sec-abs-hist__title" id="sec-abs-hist-title">Historique des absences</h2>
+
+  <p class="cs-muted sec-abs-hist__intro">Dernières absences enregistrées{% if historique_medecin_only %} pour votre compte{% endif %}.</p>
+
+  <ul class="sec-abs-hist__list">
+
+    {% for a in absences_historique %}
+
+    <li class="sec-abs-hist__item">
+
+      <div class="sec-abs-hist__item-hdr">
+
+        <span class="sec-abs-hist__pill">Absence</span>
+
+        <time class="sec-abs-hist__when" datetime="{{ a.date_creation|date:'c' }}">{{ a.date_creation|date:"d/m/Y H:i" }}</time>
+
+      </div>
+
+      <p class="sec-abs-hist__line">
+
+        <strong>Dr {{ a.medecin.user.get_full_name|default:a.medecin.user.username }}</strong>
+
+        <span class="sec-abs-hist__sep">—</span>
+
+        {{ a.date_absence|date:"d/m/Y" }}
+
+      </p>
+
+      {% if a.motif %}
+
+      <p class="sec-abs-hist__motif">Motif : {{ a.motif }}</p>
+
+      {% endif %}
+
+      <p class="sec-abs-hist__meta">Signalée par {{ a.get_signalee_par_display|lower }}</p>
+
+    </li>
+
+    {% endfor %}
+
+  </ul>
+
+</section>
+
+{% else %}
+
+<section class="cs-glass cs-glass--pad sec-abs-hist sec-abs-hist--empty" aria-labelledby="sec-abs-hist-empty">
+
+  <h2 class="sec-abs-hist__title" id="sec-abs-hist-empty">Historique des absences</h2>
+
+  <p class="cs-muted" style="margin:0;font-size:0.9rem;">Aucune absence enregistrée pour le moment.</p>
+
+</section>
+
+{% endif %}
+

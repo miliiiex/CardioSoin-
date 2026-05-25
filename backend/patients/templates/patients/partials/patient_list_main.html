@@ -1,0 +1,50 @@
+<h1 class="cs-hero-title">Patients</h1>
+<p class="cs-lead">
+  {% if can_manage_patients %}
+  Gestion des fiches (création, modification) — accès secrétariat.
+  {% else %}
+  Consultation des dossiers médicaux — ouvrez le dossier d’un patient (lecture/édition autorisée par le médecin, sans création de patient ici).
+  {% endif %}
+</p>
+{% if can_manage_patients %}
+<div class="cs-nav" style="margin-bottom:1rem;">
+    <a href="{% url 'patient_add' %}" class="cs-btn" style="text-decoration:none;">+ Ajouter un patient</a>
+</div>
+{% endif %}
+
+<div class="cs-glass cs-glass--pad" style="padding:0;overflow:hidden;">
+    <div class="cs-table-wrap">
+        <table class="cs-table">
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Téléphone</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for patient in patients %}
+                <tr>
+                    <td>{{ patient.user.get_full_name|default:patient.user.username }}</td>
+                    <td>{{ patient.telephone }}</td>
+                    <td>
+                        {% if user.role == "doctor" %}
+                        <a href="{% url 'doctor_dossier' patient.id %}">Dossier médical</a>
+                        {% else %}
+                        <a href="{% url 'secretary_patient_dossier' patient.id %}">Dossier médical</a>
+                        {% endif %}
+                        {% if can_manage_patients %}
+                        ·
+                        <a href="{% url 'patient_edit' patient.id %}">Modifier la fiche</a>
+                        ·
+                        <a href="{% url 'patient_delete' patient.id %}" style="color:#fca5a5;">Supprimer</a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="3" class="cs-muted">Aucun patient</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>

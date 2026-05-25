@@ -1,0 +1,227 @@
+{% extends "accounts/base_doctor.html" %}
+{% load static %}
+{% block body_class %}doctor-cabinet staff-nude desk-dash-layout{% endblock %}
+{% block title %}Bureau médecin — CardioSoin{% endblock %}
+{% block nav_desk %}is-active{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/secretary-dashboard.css' %}?v=10">
+{% endblock %}
+
+{% block extra_js %}
+<script defer src="{% static 'js/doctor-dashboard.js' %}?v=2"></script>
+{% endblock %}
+
+{% block content %}
+
+{{ rdv_date_marks|json_script:"ddash-rdv-dates" }}
+
+<header class="desk-hero desk-hero--sec">
+  <div class="desk-hero__sec-grid">
+    <div class="desk-hero__sec-welcome">
+      <h1 class="cs-hero-title">Dr {{ user.get_full_name|default:user.last_name|default:user.username }}</h1>
+      <p class="cs-lead">
+        Vue d’ensemble de votre activité&nbsp;: rendez-vous du jour, planning filtrable par calendrier, patients récents et suivi du risque cardiovasculaire — sur le même principe que le tableau de bord secrétaire.
+      </p>
+      <div class="desk-hero__sec-badges">
+        <span class="cs-badge">Médecin</span>
+      </div>
+    </div>
+    <div class="desk-hero__sec-status" aria-labelledby="doc-hero-statut-h">
+      <h2 id="doc-hero-statut-h" class="cs-section desk-hero__sec-status-h">Statut cabinet</h2>
+      <p class="cs-status desk-hero__sec-status-line">
+        <span class="cs-dot {% if cabinet_statut == 'ouvert' %}cs-dot--open{% else %}cs-dot--closed{% endif %}"></span>
+        {% if cabinet_statut == 'ouvert' %}
+        <strong>Ouvert</strong> <span class="cs-muted">— accueil patient</span>
+        {% else %}
+        <strong>Fermé</strong> <span class="cs-muted">— hors horaires d’accueil</span>
+        {% endif %}
+      </p>
+      <p class="cs-muted" style="margin:0.5rem 0 0;font-size:0.82rem;line-height:1.45;">
+        L’ouverture / fermeture est gérée par le secrétariat&nbsp;; cette indication est partagée avec les patients.
+      </p>
+    </div>
+  </div>
+</header>
+
+<p class="sec-dash-meta" id="ddash-date" aria-live="polite"></p>
+
+<div class="desk-statrow" aria-label="Indicateurs">
+  <div class="desk-stat">
+    <span class="desk-stat__val">{{ stat_patients }}</span>
+    <span class="desk-stat__label">Patients enregistrés</span>
+  </div>
+  <div class="desk-stat">
+    <span class="desk-stat__val">{{ stat_rdv_aujourdhui }}</span>
+    <span class="desk-stat__label">RDV prévus aujourd’hui</span>
+  </div>
+  <div class="desk-stat desk-stat--sec-annonces">
+    <span class="desk-stat__val desk-stat__val--sec-anno-title">RDV à venir</span>
+    <span class="desk-stat__label">{{ stat_rdv_a_venir }} créneau(x) à partir de maintenant · {{ stat_total_secretaires }} secrétaire(s)</span>
+  </div>
+</div>
+
+<div class="sec-dash-planner">
+  <div class="sec-cal" aria-label="Calendrier de vos rendez-vous">
+    <div class="sec-cal__head">
+      <button type="button" class="sec-cal__nav" id="ddash-cal-prev" aria-label="Mois précédent">‹</button>
+      <h2 class="sec-cal__title" id="ddash-cal-label"></h2>
+      <button type="button" class="sec-cal__nav" id="ddash-cal-next" aria-label="Mois suivant">›</button>
+    </div>
+    <p class="sec-cal__hint">
+      Les jours avec un point ont au moins un de vos rendez-vous. Cliquez un jour pour filtrer la liste du planning.
+    </p>
+    <div class="sec-cal__weekdays" aria-hidden="true">
+      <span>Lun</span><span>Mar</span><span>Mer</span><span>Jeu</span><span>Ven</span><span>Sam</span><span>Dim</span>
+    </div>
+    <div class="sec-cal__grid" id="ddash-cal-grid"></div>
+    <button type="button" class="sec-cal__reset" id="ddash-cal-reset">Afficher tous les rendez-vous du planning</button>
+  </div>
+
+  <div class="sec-dash-col">
+
+    <div class="cs-glass cs-glass--pad cs-glass--lift">
+      <div class="sec-dash-panel-head">
+        <h2 class="sec-dash-panel-title">Rendez-vous aujourd’hui</h2>
+        <a class="sec-dash-panel-link" href="{% url 'doctor_agenda' %}?jour={{ jour|date:'Y-m-d' }}">Agenda jour →</a>
+      </div>
+      {% if rdvs_aujourdhui %}
+      <div class="sec-dash-appt-list sec-dash-appt-list--today">
+        {% for r in rdvs_aujourdhui %}
+        {% include "accounts/partials/doctor_desk_rdv_item.html" %}
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="sec-dash-empty">
+        <p class="sec-dash-empty__title">Aucun rendez-vous aujourd’hui</p>
+        <p class="sec-dash-empty__text">Les créneaux se gèrent depuis «&nbsp;Agenda&nbsp;» ou le secrétariat.</p>
+      </div>
+      {% endif %}
+    </div>
+
+    <div class="cs-glass cs-glass--pad cs-glass--lift">
+      <div class="sec-dash-panel-head">
+        <div>
+          <h2 class="sec-dash-panel-title">Planning (filtre calendrier)</h2>
+          <p class="sec-dash-meta" id="ddash-appt-filter-label" style="margin:0;">Tous vos autres rendez-vous (hors jour actuel, filtre calendrier)</p>
+        </div>
+        <a class="sec-dash-panel-link" href="{% url 'doctor_agenda' %}">Tout voir agenda →</a>
+      </div>
+      {% if rdvs_planning %}
+      <div class="sec-dash-appt-list" id="ddash-appt-list">
+        {% for r in rdvs_planning %}
+        {% include "accounts/partials/doctor_desk_rdv_item.html" with show_data_date=1 %}
+        {% endfor %}
+      </div>
+      <div class="sec-dash-empty sec-dash-empty--filter" id="ddash-appt-empty-filter" hidden>
+        <p class="sec-dash-empty__title">Aucun rendez-vous ce jour-là</p>
+        <p class="sec-dash-empty__text">Essayez une autre date ou réinitialisez le calendrier.</p>
+        <button type="button" class="sec-dash-empty__btn" id="ddash-appt-empty-btn">Réinitialiser</button>
+      </div>
+      {% else %}
+      <div class="sec-dash-empty">
+        <p class="sec-dash-empty__title">Pas d’autres rendez-vous</p>
+        <p class="sec-dash-empty__text">Hors le jour actuel, aucun RDV sur les 90 jours passés et 180 à venir pour votre agenda.</p>
+      </div>
+      {% endif %}
+    </div>
+
+    <div class="cs-glass cs-glass--pad cs-glass--lift">
+      <div class="sec-dash-panel-head">
+        <h2 class="sec-dash-panel-title">Patients récemment enregistrés</h2>
+        <a class="sec-dash-panel-link" href="{% url 'patient_list' %}">Liste complète →</a>
+      </div>
+      {% if patients_recent %}
+      <ul class="sec-patient-list">
+        {% for p in patients_recent %}
+        <li class="sec-patient-list__item">
+          <span class="sec-patient-list__name">
+            <a href="{% url 'doctor_dossier' p.pk %}">{{ p.user.get_full_name|default:p.user.username }}</a>
+          </span>
+          <span class="sec-patient-list__meta">{{ p.user.email|truncatechars:26 }}</span>
+        </li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p class="cs-muted" style="margin:0;font-size:0.9rem;">Aucun patient encore en base.</p>
+      {% endif %}
+    </div>
+
+    <div class="cs-glass cs-glass--pad cs-glass--lift desk-doc-risk">
+      <div class="sec-dash-panel-head">
+        <h2 class="sec-dash-panel-title">Risque cardiovasculaire</h2>
+        <a class="sec-dash-panel-link" href="{% url 'doctor_score' %}">Score cardio →</a>
+      </div>
+      {% if score_bars and score_curve %}
+      <p class="desk-curve-cap" style="margin-top:0;">Tendance (plus ancien → plus récent). Axe <strong>{{ score_curve.r_lo_s }} %</strong> à <strong>{{ score_curve.r_hi_s }} %</strong></p>
+      <div class="desk-curve" role="img" aria-label="Courbe du risque à 10 ans">
+        <svg class="desk-curve__svg" viewBox="0 0 {{ score_curve.w }} {{ score_curve.h }}" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+          <defs>
+            <linearGradient id="docDeskCurveArea" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#2dd4bf" stop-opacity="0.42"/>
+              <stop offset="0.5" stop-color="#0d9488" stop-opacity="0.18"/>
+              <stop offset="1" stop-color="#0c1220" stop-opacity="0"/>
+            </linearGradient>
+            <linearGradient id="docDeskLineStroke" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="#5eead4"/>
+              <stop offset="0.5" stop-color="#2dd4bf"/>
+              <stop offset="1" stop-color="#14b8a6"/>
+            </linearGradient>
+          </defs>
+          {% for t in score_curve.y_ticks %}
+          <line class="desk-curve__grid" x1="{{ score_curve.plot_left }}" y1="{{ t.y }}" x2="{{ score_curve.x_right }}" y2="{{ t.y }}"/>
+          {% endfor %}
+          {% if score_curve.show_y20 %}
+          <line class="desk-curve__ref-line desk-curve__ref-line--20" x1="{{ score_curve.plot_left }}" y1="{{ score_curve.y20 }}" x2="{{ score_curve.x_right }}" y2="{{ score_curve.y20 }}"/>
+          {% endif %}
+          {% if score_curve.show_y10 %}
+          <line class="desk-curve__ref-line desk-curve__ref-line--10" x1="{{ score_curve.plot_left }}" y1="{{ score_curve.y10 }}" x2="{{ score_curve.x_right }}" y2="{{ score_curve.y10 }}"/>
+          {% endif %}
+          <path class="desk-curve__area" d="{{ score_curve.d_area }}" fill="url(#docDeskCurveArea)"/>
+          <path class="desk-curve__line" d="{{ score_curve.d_line }}" fill="none" stroke="url(#docDeskLineStroke)" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/>
+          {% for d in score_curve.dots %}
+          <circle class="desk-curve__dot" cx="{{ d.x }}" cy="{{ d.y }}" r="3.4" />
+          {% endfor %}
+          {% for t in score_curve.y_ticks %}
+          <text class="desk-curve__ylab" x="36" y="{{ t.y }}" text-anchor="end" dominant-baseline="middle">{{ t.text }}</text>
+          {% endfor %}
+          <text class="desk-curve__axis-title" x="4" y="14" text-anchor="start">Risque</text>
+          {% for m in score_curve.x_marks %}
+          <text class="desk-curve__xlab" x="{{ m.x }}" y="{{ score_curve.x_label_y }}" text-anchor="middle" dominant-baseline="middle">{{ m.label }}</text>
+          {% endfor %}
+        </svg>
+      </div>
+      <ul class="desk-risk-grid" role="list" style="margin-top:0.65rem;">
+        {% for b in score_bars %}
+        <li class="desk-risk-snap desk-risk-snap--{{ b.niveau_slug }}">
+          <p class="desk-risk-snap__who" title="{{ b.patient }}">{{ b.patient }}</p>
+          <p class="desk-risk-snap__date" title="{{ b.label }}">{{ b.label_short }}</p>
+          <div class="desk-risk-snap__value-wrap">
+            <span class="desk-risk-snap__value">{{ b.risk|floatformat:1 }}<span class="desk-risk-snap__unit">%</span></span>
+            <span class="desk-risk-snap__badge">{{ b.niveau }}</span>
+          </div>
+        </li>
+        {% endfor %}
+      </ul>
+      {% elif score_bars %}
+      <ul class="desk-risk-grid" role="list">
+        {% for b in score_bars %}
+        <li class="desk-risk-snap desk-risk-snap--{{ b.niveau_slug }}">
+          <p class="desk-risk-snap__who" title="{{ b.patient }}">{{ b.patient }}</p>
+          <p class="desk-risk-snap__date" title="{{ b.label }}">{{ b.label_short }}</p>
+          <div class="desk-risk-snap__value-wrap">
+            <span class="desk-risk-snap__value">{{ b.risk|floatformat:1 }}<span class="desk-risk-snap__unit">%</span></span>
+            <span class="desk-risk-snap__badge">{{ b.niveau }}</span>
+          </div>
+        </li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p class="cs-muted" style="margin:0;font-size:0.92rem;">Aucun score enregistré pour l’instant — lancez une analyse depuis l’onglet score / ECG.</p>
+      {% endif %}
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

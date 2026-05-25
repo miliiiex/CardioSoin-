@@ -1,0 +1,366 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr" class="lp-root">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CardioSoin — Cabinet de cardiologie</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/landing.css' %}?v=31">
+  <link rel="stylesheet" href="{% static 'css/rdv-booking.css' %}?v=9">
+</head>
+<body class="landing-page">
+
+  {# Fonds décoratifs (fixes, non interactifs) #}
+  <div class="lp-aurora" aria-hidden="true"></div>
+  <div class="lp-orb lp-orb--a" aria-hidden="true"></div>
+  <div class="lp-orb lp-orb--b" aria-hidden="true"></div>
+  <div class="lp-orb lp-orb--c" aria-hidden="true"></div>
+
+  <div class="page">
+
+    {# ---------- Barre navigation #}
+    <header class="nav lp-reveal" role="navigation" aria-label="Principale" style="animation-delay:0.05s">
+      <div class="nav-brand-group">
+        <div class="nav-brand-line">
+          <a class="nav-brand" href="{% url 'landing' %}">
+            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M24 40s-10-6.2-15-12.5C4.2 22.8 2.5 16.5 6 12c2-2.3 5.3-3.4 8.5-2.2 1.5.5 2.8 1.4 3.7 2.5.7-.4 1.4-.7 2.1-.9.6-.1 1.2-.1 1.8.1.6.1 1.1.3 1.6.6.5-.2 1-.4 1.5-.5.6-.1 1.2-.1 1.8.1.7.1 1.3.3 1.8.6.9-1.1 2-2.1 3.4-2.5 1.1-.3 2.2-.2 3.2.1 1 .4 1.9.9 2.5 1.6 1.2 1.2 1.7 2.7 1.5 4.1-.1 1.4-.6 2.7-1.2 3.7C35 32 24 40 24 40Z" fill="url(#glp)" stroke="rgba(74,99,64,0.35)" stroke-width="1.2"/>
+              <defs>
+                <linearGradient id="glp" x1="8" y1="8" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#bddca1"/>
+                  <stop offset="1" stop-color="#4a633c"/>
+                </linearGradient>
+              </defs>
+            </svg>
+            <span class="nav-brand-stack">
+              <span class="nav-brand-title">CardioSoin</span>
+              <span class="nav-brand-tag">Portail patient</span>
+            </span>
+          </a>
+          {% if not user.is_authenticated or user.role == "doctor" or user.role == "secretary" %}
+            <span class="nav-brand-sep" aria-hidden="true"></span>
+            <a
+              class="nav-staff-lock"
+              href="{% if user.is_authenticated and user.role == 'doctor' %}{% url 'doctor_desk' %}{% elif user.is_authenticated and user.role == 'secretary' %}{% url 'secretary_desk' %}{% else %}{% url 'staff_login' %}{% endif %}"
+              title="{% if user.is_authenticated and user.role == 'doctor' %}Bureau médecin{% elif user.is_authenticated and user.role == 'secretary' %}Bureau secrétariat{% else %}Connexion personnel — médecin ou secrétaire{% endif %}"
+              aria-label="{% if user.is_authenticated and user.role == 'doctor' %}Ouvrir le bureau médecin{% elif user.is_authenticated and user.role == 'secretary' %}Ouvrir le bureau secrétariat{% else %}Accéder à la connexion personnel du cabinet{% endif %}"
+            >
+              <svg class="nav-staff-lock__icon" viewBox="0 0 24 24" width="14" height="14" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+                <defs>
+                  <linearGradient id="lockNavStroke" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#d0ebbc"/>
+                    <stop offset="0.5" stop-color="#bddca1"/>
+                    <stop offset="1" stop-color="#5c7248"/>
+                  </linearGradient>
+                </defs>
+                <path d="M7 11V8a5 5 0 0 1 10 0v3" fill="none" stroke="url(#lockNavStroke)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <rect x="4.5" y="11" width="15" height="10.5" rx="2.75" fill="rgba(189,220,161,0.12)" stroke="url(#lockNavStroke)" stroke-width="2"/>
+                <path d="M12 15.3v2.6" stroke="url(#lockNavStroke)" stroke-width="1.85" stroke-linecap="round"/>
+                <circle cx="12" cy="15.25" r="1.4" fill="#4a633c"/>
+              </svg>
+            </a>
+          {% endif %}
+        </div>
+      </div>
+
+      <nav class="nav-links" aria-label="Sections">
+        <a href="#accueil">Accueil</a>
+        <a href="#equipe">Équipe</a>
+        <a href="#contact">Contact</a>
+      </nav>
+
+      <div class="nav-actions">
+        {% if user.is_authenticated %}
+          {% if user.role == "patient" %}
+            <a class="btn-solid" href="{% url 'patient_space' %}">Mon espace</a>
+          {% endif %}
+          <a class="btn-ghost" href="{% url 'logout' %}">Déconnexion</a>
+        {% else %}
+          <a class="btn-ghost btn-ghost--warm" href="{% url 'login' %}?inscription=1">Inscription</a>
+          <a class="btn-solid lp-pastel" href="{% url 'login' %}">Connexion</a>
+        {% endif %}
+      </div>
+    </header>
+
+    {# ---------- Hero institutionnel #}
+    <section class="lp-inst lp-reveal" id="accueil" aria-label="Accueil" style="animation-delay:0.08s">
+      <div class="lp-inst__wash" aria-hidden="true"></div>
+      <div class="lp-inst__ribbon" aria-hidden="true"></div>
+
+      {# Masthead titre / baseline #}
+      <div class="lp-inst__hero-wrap">
+        <header class="lp-inst__mast">
+          <div class="lp-inst__seal" aria-hidden="true">
+            <svg class="lp-inst__seal-svg" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="24" cy="24" r="22" stroke="currentColor" stroke-opacity="0.55" stroke-width="1" fill="none"/><path d="M24 38s-8-5.2-13-11C9 21 8 14 13 11c4-3 11-1 11 10 0-11 7-13 11-10 5 3 4 10-4 16-5 5.8-11 11-11 11Z" fill="currentColor" fill-opacity="0.22" stroke="currentColor" stroke-width="1.2"/></svg>
+          </div>
+          <p class="lp-inst__micro">Cabinet de cardiologie</p>
+          <h1 class="lp-inst__headline">CardioSoin</h1>
+          <p class="lp-inst__tagline">L’excellence des soins au service de votre cœur</p>
+        </header>
+      </div>
+
+      {# Grille équipe médicale (structure type « cabinet », thème vert clair) #}
+      <div class="lp-inst__pillars-slot">
+        <section class="lp-team pillars pillars--overlap lp-reveal" id="equipe" aria-labelledby="lp-team-heading" style="animation-delay:0.24s">
+          <header class="lp-team__intro">
+            <p class="lp-team__micro">Équipe médicale</p>
+            <h2 id="lp-team-heading" class="lp-team__title">Cœur &amp; excellence</h2>
+            <p class="lp-team__subtitle">Une pratique exigeante, une écoute attentionnée</p>
+            <span class="lp-team__heart" aria-hidden="true">♥</span>
+            <p class="lp-team__lead">
+              Cardiologues du cabinet&nbsp;: même exigence de qualité pour chaque rendez-vous, du diagnostic au suivi.
+              Une coordination simple entre les praticiens et le secrétariat pour sécuriser votre parcours de soins.
+            </p>
+          </header>
+
+          <div class="lp-team__grid">
+            {% for card in landing_medecins_cards %}
+              <article class="lp-team-card">
+                <div class="lp-team-card__body">
+                  {% if card.badge %}
+                    <span class="lp-team-card__badge">{{ card.badge }}</span>
+                  {% endif %}
+                  <h3 class="lp-team-card__name">Dr. {{ card.nom_affiche|title }}</h3>
+                  <p class="lp-team-card__role">{{ card.subtitle }}</p>
+                  <div class="lp-team-card__bio lp-team-card__bio--prose">{{ card.intro|linebreaksbr }}</div>
+                  {% if card.expertise_lines %}
+                    <ul class="lp-team-card__skills">
+                      {% for line in card.expertise_lines %}
+                        <li>{{ line }}</li>
+                      {% endfor %}
+                    </ul>
+                  {% endif %}
+                </div>
+                <div class="lp-team-card__avatar{% if card.photo_url %} lp-team-card__avatar--photo{% endif %}" aria-hidden="true">
+                  {% if card.photo_url %}
+                    <img src="{{ card.photo_url }}" alt="" width="240" height="320" loading="lazy" decoding="async">
+                  {% else %}
+                    {{ card.initials }}
+                  {% endif %}
+                </div>
+              </article>
+            {% empty %}
+              <p class="lp-team-card lp-team-card--empty" role="status">
+                Aucun médecin à afficher pour le moment&nbsp;: les comptes actifs avec le rôle «&nbsp;médecin&nbsp;» apparaîtront automatiquement ici.
+              </p>
+            {% endfor %}
+          </div>
+
+        </section>
+      </div>
+    </section>
+
+    {# ---------- Contact #}
+    <section class="lp-contact lp-reveal" id="contact" aria-labelledby="contact-heading" style="animation-delay:0.34s">
+      <div class="lp-contact__blob" aria-hidden="true"></div>
+      <div class="lp-contact__inner">
+        <div class="lp-contact__left">
+          <div class="lp-contact__glow" aria-hidden="true"></div>
+          <div class="lp-contact__dots" aria-hidden="true"></div>
+          <h2 id="contact-heading" class="lp-contact__title">Contactez-nous.</h2>
+          <p class="lp-contact__lead">
+            Une question sur le cabinet, vos examens ou votre suivi ? Notre secrétariat vous oriente avec plaisir du lundi au vendredi.
+          </p>
+        </div>
+        <ul class="lp-contact__list">
+          <li class="lp-contact__item">
+            <span class="lp-contact__icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-4.5 7-11a7 7 0 1 0-14 0c0 6.5 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+            </span>
+            <div class="lp-contact__body">
+              <h3 class="lp-contact__label">Adresse</h3>
+              <p class="lp-contact__value">CardioSoin — Centre médical, 12 av. de la Santé, Paris 15ᵉ</p>
+            </div>
+          </li>
+          <li class="lp-contact__item">
+            <span class="lp-contact__icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.35 1.78.68 2.63a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.45-1.25a2 2 0 0 1 2.11-.45c.85.33 1.73.56 2.63.68A2 2 0 0 1 22 16.92z"/></svg>
+            </span>
+            <div class="lp-contact__body">
+              <h3 class="lp-contact__label">Téléphone</h3>
+              <p class="lp-contact__value"><a href="tel:+33123456789">+33&nbsp;1&nbsp;23&nbsp;45&nbsp;67&nbsp;89</a></p>
+            </div>
+          </li>
+          <li class="lp-contact__item">
+            <span class="lp-contact__icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+            </span>
+            <div class="lp-contact__body">
+              <h3 class="lp-contact__label">Mail</h3>
+              <p class="lp-contact__value"><a href="mailto:contact@cardiosoin.fr">contact@cardiosoin.fr</a></p>
+            </div>
+          </li>
+          <li class="lp-contact__item lp-contact__item--rdv">
+            <button type="button" class="lp-contact__icon-btn lp-contact__icon lp-contact__icon--accent lp-open-rdv" aria-label="Ouvrir le formulaire de rendez-vous">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18m-13 8h6"/></svg>
+            </button>
+            <div class="lp-contact__body">
+              <h3 class="lp-contact__label">Prendre rendez-vous</h3>
+              <p class="lp-contact__value lp-contact__value--action">
+                <button type="button" class="lp-contact__rdv-link lp-open-rdv">Réserver un créneau en ligne<span class="lp-contact__rdv-arrow" aria-hidden="true">→</span></button>
+                <span class="lp-contact__hint">Ouverture du formulaire sans compte — coordonnées demandées pour vous recontacter.</span>
+              </p>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    {# ---------- Pied de page #}
+    <footer class="lp-footer">
+      <div class="lp-footer-inner">
+        © {% now "Y" %} CardioSoin — Cabinet de cardiologie ·
+        <a href="{% url 'login' %}">Connexion</a>
+        {% if user.is_authenticated and user.role == "patient" %}
+          · <a href="{% url 'patient_space' %}">Espace patient</a>
+        {% endif %}
+      </div>
+    </footer>
+  </div>
+
+  {# Modal RDV — même formulaire que l’espace patient (rdv-booking) #}
+  <div
+    id="lp-rdv-panel"
+    class="lp-rdv-overlay"
+    {% if not landing_rdv_auto_open %}hidden aria-hidden="true"{% endif %}
+    data-lp-auto-open="{% if landing_rdv_auto_open %}1{% endif %}"
+  >
+    <div class="lp-rdv-overlay__backdrop lp-close-rdv" tabindex="-1" aria-hidden="true"></div>
+    <div
+      class="lp-rdv-overlay__dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="lp-rdv-heading"
+    >
+      <div class="lp-rdv-overlay__surface">
+        <div class="lp-rdv-modal-head">
+          <div class="lp-rdv-modal-head__text">
+            <p class="lp-rdv-modal-kicker">Réserver en ligne</p>
+            <h2 id="lp-rdv-heading" class="lp-rdv-modal__title">Prendre un <span>rendez-vous</span></h2>
+            <p class="lp-rdv-modal__lead">Sans compte : renseignez vos coordonnées, un médecin, une date et une heure. Avec un compte patient, la demande est liée à votre profil. En cas de conflit d’agenda, des créneaux alternatifs vous sont proposés.</p>
+          </div>
+          <button type="button" class="lp-rdv-panel__close lp-close-rdv" aria-label="Fermer le formulaire">×</button>
+        </div>
+
+        <div class="rdv-stack lp-rdv-modal-stack">
+          <p id="lp-rdv-client-error" class="lp-rdv-modal-error" hidden role="alert"></p>
+
+          {% if landing_rdv_alt %}
+          <div class="rdv-card rdv-card--alt">
+            <h2>Créneaux suggérés</h2>
+            <ul>
+              {% for line in landing_rdv_alt %}
+              <li>{{ line }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+          {% endif %}
+
+          {% if not landing_rdv_medecins %}
+          <div class="rdv-card rdv-card--warn">
+            <p>Aucun médecin n’est disponible pour la réservation en ligne pour le moment. Merci de contacter le secrétariat.</p>
+          </div>
+          {% elif user.is_authenticated and user.role != "patient" %}
+          <div class="rdv-card">
+            <p class="lp-rdv-panel__muted">La réservation en ligne depuis l’accueil est destinée aux patients. Utilisez votre espace personnel pour gérer le cabinet.</p>
+            <div class="lp-rdv-panel__guest-actions lp-rdv-modal-guest-actions">
+              {% if user.role == "doctor" %}
+              <a class="lp-rdv-panel__btn" href="{% url 'doctor_desk' %}">Bureau médecin</a>
+              {% elif user.role == "secretary" %}
+              <a class="lp-rdv-panel__btn" href="{% url 'secretary_desk' %}">Bureau secrétariat</a>
+              {% endif %}
+              <button type="button" class="rdv-btn rdv-btn--ghost lp-close-rdv">Fermer</button>
+            </div>
+          </div>
+          {% else %}
+          <div class="rdv-card rdv-card--form">
+            <form id="lp-rdv-form" class="rdv-form" method="post"
+              action="{% if user.is_authenticated %}{% url 'patient_rendez_vous_nouveau' %}{% else %}{% url 'landing_rdv_public' %}{% endif %}">
+              {% csrf_token %}
+              <input type="hidden" name="origin" value="landing">
+              <div class="rdv-form__fields">
+                {% if not user.is_authenticated %}
+                <div class="rdv-field">
+                  <label for="lp-rdv-guest-nom">Nom et prénom</label>
+                  <input type="text" name="guest_nom_complet" id="lp-rdv-guest-nom"
+                    autocomplete="name" required maxlength="200"
+                    value="{{ landing_rdv_form.guest_nom_complet|default:'' }}" placeholder="Ex. Dupont Marie">
+                </div>
+                <div class="rdv-field-row rdv-field-row--2col">
+                  <div class="rdv-field">
+                    <label for="lp-rdv-guest-email">E-mail</label>
+                    <input type="email" name="guest_email" id="lp-rdv-guest-email"
+                      autocomplete="email" required
+                      value="{{ landing_rdv_form.guest_email|default:'' }}" placeholder="vous@example.fr">
+                  </div>
+                  <div class="rdv-field">
+                    <label for="lp-rdv-guest-tel">Téléphone</label>
+                    <input type="tel" name="guest_telephone" id="lp-rdv-guest-tel"
+                      autocomplete="tel" required minlength="6"
+                      value="{{ landing_rdv_form.guest_telephone|default:'' }}" placeholder="06&nbsp;…">
+                  </div>
+                </div>
+                {% endif %}
+                <div class="rdv-field">
+                  <label for="lp-rdv-medecin">Médecin</label>
+                  <select name="medecin" id="lp-rdv-medecin" required>
+                    <option value="">— Choisissez un médecin —</option>
+                    {% for m in landing_rdv_medecins %}
+                    <option value="{{ m.id }}" {% if landing_rdv_form.medecin == m.id|stringformat:"s" %}selected{% endif %}>Dr {{ m.user.get_full_name|default:m.user.username }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <div class="rdv-field-row rdv-field-row--2col">
+                  <div class="rdv-field">
+                    <label for="lp-rdv-date">Date</label>
+                    <input type="date" name="date" id="lp-rdv-date" value="{{ landing_rdv_form.date }}" min="{{ landing_date_min }}" required>
+                  </div>
+                  <div class="rdv-field">
+                    <label for="lp-rdv-heure">Heure</label>
+                    <input type="time" name="heure" id="lp-rdv-heure" value="{{ landing_rdv_form.heure|default:'09:00' }}" required>
+                  </div>
+                </div>
+                <div class="rdv-field">
+                  <label for="lp-rdv-motif">Motif (optionnel)</label>
+                  <textarea name="motif" id="lp-rdv-motif" rows="3" placeholder="Ex. contrôle tension, douleur thoracique…">{{ landing_rdv_form.motif }}</textarea>
+                </div>
+              </div>
+              <div class="rdv-actions">
+                <button type="submit" class="rdv-btn rdv-btn--primary">Enregistrer le rendez-vous</button>
+                <button type="button" class="rdv-btn rdv-btn--ghost lp-close-rdv">Fermer</button>
+              </div>
+            </form>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {# Messages Django : bandeau fixe en bas + fermeture (×) #}
+  {% if messages %}
+    <div class="lp-toast-stack" id="lp-toast-stack" aria-live="polite">
+      {% for message in messages %}
+        <div
+          class="lp-toast {% if 'success' in message.tags %}lp-toast--success{% elif 'error' in message.tags %}lp-toast--error{% elif 'warning' in message.tags %}lp-toast--warning{% else %}lp-toast--info{% endif %}"
+          role="status"
+          data-lp-toast
+        >
+          <div class="lp-toast__body">
+            {% if 'success' in message.tags %}
+              <span class="lp-toast__label">Merci !</span>
+            {% endif %}
+            <span class="lp-toast__text">{{ message }}</span>
+          </div>
+          <button type="button" class="lp-toast__close" aria-label="Fermer la notification">×</button>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <script defer src="{% static 'js/landing-rdv.js' %}"></script>
+</body>
+</html>

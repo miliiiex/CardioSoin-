@@ -1,0 +1,58 @@
+{% extends "accounts/base_patient_shell.html" %}
+{% load static %}
+{% block title %}Consultation du {{ rdv.date_heure|date:"d/m/Y" }} — CardioSoin{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/patient-inner-pages.css' %}?v=6">{% endblock %}
+{% block patient_toolbar %}
+<div class="patient-page-head">
+  <div></div>
+  <div class="pdash__top-meta-actions">
+    {% include "accounts/partials/patient_theme_toggle.html" %}
+  </div>
+</div>
+{% endblock %}
+{% block content %}
+<section class="pdash-feed">
+  <div class="pdash-feed__head">
+    <h2 class="pdash-feed__title">Consultation</h2>
+    <p class="pdash-feed__sub">{{ rdv.date_heure|date:"l d F Y à H:i" }} — Dr {{ rdv.medecin.user.get_full_name|default:rdv.medecin.user.username }}</p>
+  </div>
+  <nav class="patient-back-nav" aria-label="Retour">
+    <a class="patient-back-link" href="{{ back_url }}">
+      <span class="patient-back-link__icon" aria-hidden="true">←</span>
+      <span class="patient-back-link__text">{{ back_label }}</span>
+    </a>
+  </nav>
+
+  <div class="cs-glass cs-glass--pad" style="margin-bottom:1.25rem;">
+    <p style="margin:0 0 0.35rem;"><strong>Statut</strong> : {{ rdv.get_statut_display }}</p>
+    {% if rdv.motif %}
+    <p style="margin:0;"><strong>Motif</strong> : {{ rdv.motif|linebreaksbr }}</p>
+    {% endif %}
+  </div>
+
+  <h3 class="pdash-feed__title" style="font-size:1.1rem;margin-bottom:0.5rem;">Documents de ce rendez-vous</h3>
+
+  {% if doc_items %}
+  <ul class="patient-doc-list">
+    {% for item in doc_items %}
+    <li class="patient-doc-list__item">
+      <div class="patient-doc-list__info">
+        <span class="patient-doc-list__label">{{ item.label }}</span>
+        <span class="patient-doc-list__date">{{ item.date|date:"d/m/Y H:i" }}</span>
+        {% if item.hint %}
+        <span class="patient-doc-list__hint">{{ item.hint }}</span>
+        {% endif %}
+      </div>
+      {% if item.download_name == "telecharger_ordonnance" %}
+      <a class="patient-doc-list__dl" href="{% url 'telecharger_ordonnance' item.pk %}">Télécharger PDF</a>
+      {% else %}
+      <a class="patient-doc-list__dl" href="{% url 'telecharger_document_medical' item.pk %}">Télécharger PDF</a>
+      {% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p style="opacity:0.8;">Aucun document n’a encore été associé à ce rendez-vous.</p>
+  {% endif %}
+</section>
+{% endblock %}
