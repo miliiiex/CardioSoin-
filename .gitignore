@@ -1,8 +1,17 @@
-backend/.env
-backend/email_secret.txt
-venv/
+# Python
 __pycache__/
-*.pyc
+*.py[cod]
+*.env
 .env
+venv/
+env/
+
+# Django
 *.sqlite3
+db.sqlite3
 media/
+staticfiles/
+
+# IDE
+.vscode/
+.idea/
